@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Seymour+One&display=swap');
 html {
   font-size: 10px;
   font-family: sans-serif;
@@ -6,6 +7,14 @@ html {
 * {
   margin: 0;
   padding: 0;
+}
+button,p,a {
+  font-family: 'Montserrat', sans-serif;
+}
+a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
 }
 
 #root {

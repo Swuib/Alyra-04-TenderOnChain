@@ -1,0 +1,26 @@
+main {
+    height: 90vh;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10vw; */
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 10% 90%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+section {
+    padding: 0 2%;
+}
+
+.main-container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}

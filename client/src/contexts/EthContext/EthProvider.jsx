@@ -10,16 +10,38 @@ function EthProvider({ children }) {
     async artifact => {
       if (artifact) {
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-        const accounts = await web3.eth.requestAccounts();
+        // const accounts = await web3.eth.requestAccounts();
+        async function isMetaMaskConnected() {
+          const {ethereum} = window;
+          let accounts = await ethereum.request({method: 'eth_accounts'});
+          console.log(accounts);
+          if (accounts.length === 1) {
+            accounts = accounts[0].toLowerCase();
+            // dispatch(web3Init());
+            // accountConnected = true;
+        } else {
+            accounts=null
+            // dispatch(web3Clear());
+            // accountConnected = false;
+        };
+          return accounts
+        };
+        const accounts = await isMetaMaskConnected();
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
         let address, contract;
         try {
+          // address
           address = artifact.networks[networkID].address;
+          // contract
           contract = new web3.eth.Contract(abi, address);
+          console.log('contract');
+          console.log(contract);
+
         } catch (err) {
           console.error(err);
         }
+
         dispatch({
           type: actions.init,
           data: { artifact, web3, accounts, networkID, contract }
@@ -30,7 +52,7 @@ function EthProvider({ children }) {
   useEffect(() => {
     const tryInit = async () => {
       try {
-        const artifact = require("../../contracts/SimpleStorage.json");
+        const artifact = require("../../contracts/TenderOnChain.json");
         init(artifact);
       } catch (err) {
         console.error(err);
@@ -41,7 +63,7 @@ function EthProvider({ children }) {
   }, [init]);
 
   useEffect(() => {
-    const events = ["chainChanged", "accountsChanged"];
+    const events = ["chainChanged", "accountsChanged","disconnect"];
     const handleChange = () => {
       init(state.artifact);
     };

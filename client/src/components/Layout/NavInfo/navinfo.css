@@ -1,0 +1,12 @@
+#nav-info {
+    height: 100%;
+    width: 100%;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#nav-info p {
+    font-size: 1.4vw;
+}

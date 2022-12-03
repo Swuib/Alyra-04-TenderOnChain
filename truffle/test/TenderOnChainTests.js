@@ -31,7 +31,7 @@ contract('TenderOnChain', accounts => {
      * @dev creation of an instance of the contract to iterate on it.
      */
     beforeEach(async function () {
-      tenderOnChainInstance = await Voting.new({from:_owner});
+      tenderOnChainInstance = await TenderOnChain.new({from:_owner});
     });
 
     /**
