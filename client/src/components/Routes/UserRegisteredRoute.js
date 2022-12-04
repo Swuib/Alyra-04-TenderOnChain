@@ -14,7 +14,7 @@ const RegisterAddProposalRoute =  ({ children }) => {
   }
   
   return (
-    (userErr !== "You're not a user" && userErr === "") 
+    (userErr !== "Vous n'etes pas un utilisateur" && userErr === "") 
     && accounts !== null 
     && userInfo !== null
     && userInfo.name !== null

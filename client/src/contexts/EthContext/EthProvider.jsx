@@ -16,13 +16,15 @@ function EthProvider({ children }) {
         async function isMetaMaskConnected() {
           const {ethereum} = window;
           let accounts = await ethereum.request({method: 'eth_accounts'});
-          let owner,userErr,userInfo;
+          let owner,priceAO,priceLot,userErr,userInfo;
           
           if (accounts.length === 1) {
             accounts = accounts[0].toLowerCase();
             // owner
             owner = await contract.methods.owner().call({ from: accounts });
             owner = owner.toLowerCase();
+            priceAO = await contract.methods.priceAO().call({ from: accounts });
+            priceLot = await contract.methods.priceLot().call({ from: accounts });
             // user Info / user error
             await contract.methods.getAccount(accounts).call({from: accounts }).then( res => {
               userInfo = {
@@ -51,12 +53,12 @@ function EthProvider({ children }) {
             userInfo = null;
             userErr = null;
         };
-          return {accounts, owner, userErr, userInfo}
+          return {accounts, owner, priceAO,priceLot, userErr, userInfo}
         };
         
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
-        
+
         let address, contract;
         try {
           // address
@@ -67,7 +69,7 @@ function EthProvider({ children }) {
           console.error(err);
         }
 
-        const {accounts, owner, userErr, userInfo} = await isMetaMaskConnected();
+        const {accounts, owner, priceAO, priceLot, userErr, userInfo} = await isMetaMaskConnected();
 
         dispatch({
           type: actions.init,
@@ -78,6 +80,8 @@ function EthProvider({ children }) {
             networkID, 
             contract, 
             owner,
+            priceAO,
+            priceLot,
             userInfo,
             userErr
           }

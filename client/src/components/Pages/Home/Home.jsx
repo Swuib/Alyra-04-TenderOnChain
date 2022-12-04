@@ -69,7 +69,7 @@ const Home = () => {
                         <div className="rigth-container">
                         {accounts !== null ? (
                             <>
-                                {userErr === "You're not a user" ? (
+                                {userErr === "Vous n'etes pas un utilisateur" ? (
                                     <div className='rigth-sub-container'>
                                         <p className='title-label'>Créer un compte</p>
                                         <form onSubmit={handelCreate}>

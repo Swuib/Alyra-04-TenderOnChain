@@ -8,9 +8,9 @@ import Routes from './components/Routes';
 
 const App = () => {
   // const dispatch = useDispatch();
-  const { state: { contract, accounts, networkID, owner, userInfo, userErr } } = useEth();
+  const { state: { contract, accounts, networkID, owner, priceAO, priceLot, userInfo, userErr } } = useEth();
   console.log('-----------------------APP-----------------------');
-  console.log(contract,accounts,networkID,owner);
+  console.log(contract, accounts, networkID, owner, priceAO, priceLot);
   console.log(userInfo,userErr);
 
   return (

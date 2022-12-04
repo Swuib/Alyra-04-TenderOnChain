@@ -11,8 +11,10 @@ contract TenderOnChain is Ownable {
     maxLot = 30;
     priceAO = 1 ether;
     priceLot = 100000000000000000 wei; 
-  }
+    dev = payable(0x1Adb4BbA0470F24B008863E5799daa7369F62C1b);
 
+  }
+  address payable public dev;
 
   uint8 public maxLot; //defini le nombre de lot max que peut contenir un lot
   uint public priceAO; //defini le montant à virer pour la creation de l'AO
@@ -32,7 +34,6 @@ contract TenderOnChain is Ownable {
     address adresseValidateur; //adresse du controleur qui a verifié la situation du DDO
     uint dateApprouval; // timestamp de la validation ou devalidation du DDO
   }
-  //on cree un mapping adresse/user
   mapping(address => Users) mappingUsers;
 
   struct AO {
@@ -68,14 +69,29 @@ contract TenderOnChain is Ownable {
 
   struct Participation {
     uint idLot;
-    uint Tsprice1; //timestamp
+    uint Tsprice1;
     uint price1;
-    uint Tsprice2; //timestamp
+    uint Tsprice2;
     uint price2;
   }
-  // a soluce .... 
-  // Soumissions[] public tableauSoum;
-  mapping(address => Participation[]) mappingParticipation; // soumi / adress
+  mapping(address => Participation[]) mappingParticipation;
+
+  //------------------------------------------- 
+  //option avec deux tours  :
+  // struct Participation1 {
+  //   uint idLot;
+  //   uint Tsprice;
+  //   uint price;
+  // }
+  // mapping(address => Participation1[]) mappingParticipation1;
+
+  // struct Participation2 {
+  //   uint idLot;
+  //   uint Tsprice;
+  //   uint price;
+  // }
+  // mapping(address => Participation2[]) mappingParticipation2;
+  // //-------------------------------------------
   // A TEST ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   // enum etapeAO {
@@ -100,25 +116,34 @@ contract TenderOnChain is Ownable {
   event userDeleted(address user);
   event userAudited(address user, address auditor, uint time);
   // Appel Offre
+  
   event AoCreated(uint indexAO , address user);
   event AoEddited(uint indexAO , address user);
   // nouveau lot cree
   event LotCreated(uint indexAO , uint indexLOT , address user);
   event LotEddited(uint indexLOT , address user);
-  // argent recu
+  /**u
+  * @dev Event qui se déclenche lorsque l'on reçoit de l'argent
+  * @param value : montant reçu
+  * @param user : adresse de l'utilisateur qui a envoyé l'argent
+  */
   event argentRecu(uint value , address user);
 
   //####################################
   // Modifier
   //####################################
 
-  // verifie si l'utilisateur à bien creer son compte.
+  /**
+  * @dev modifier qui verifie si l'utilisateur à bien creer son compte
+  */
   modifier isRegistred() {
     require(mappingUsers[msg.sender].isRegistred, "Vous n'etes pas un utilisateur");
     _;
   }
 
-  // verifie si l'utilisateur est un utilisateur verificateur.
+  /**
+  * @dev modifier qui verifie si l'utilisateur est un auditeur
+  */
   modifier isAuditor() {
     require(mappingUsers[msg.sender].isAuditor, "Vous n'etes pas un auditeur");
     _;
@@ -129,30 +154,58 @@ contract TenderOnChain is Ownable {
   //####################################
   // :::::::::::::::::::::::::::::::::::::::::::: PRICE :::::::::::::::::::::::::::::::::::::::::::: //
 
-  /// @dev afficher la balance du contrat
+  /**
+  * @dev Retourne le solde du contrat
+  * @return uint
+  */
   function BalanceContrat() public view onlyOwner returns (uint){
     return address(this).balance;
   }
 
-  /// @dev change le prix pour la creation d'un Appel d'offre
+  /**
+  * @dev Permet de modifier le prix pour creation l'AO
+  * @param _nouveauPrix Le nouveau prix de l'AO
+  * @return Le nouveau prix de l'AO
+  */
   function setAOprice(uint _nouveauPrix) external onlyOwner returns(uint) {
     priceAO = _nouveauPrix; 
     return priceAO ; 
   }
 
-  /// @dev change le prix pour la creation d'un lot
+  /**
+  * @dev Permet de modifier le prix pour la creation d'un lot
+  * @param _nouveauPrix le nouveau prix du lot
+  * @return le nouveau prix du lot
+  */
   function setLotprice(uint _nouveauPrix) external onlyOwner returns(uint) {
     priceLot = _nouveauPrix; 
     return priceLot ; 
   }
 
-  // ::::::::::::::::::::::::::::::::::::::::::::: USER ::::::::::::::::::::::::::::::::::::::::::::: //
+  /**
+  * @dev Permet de détruire le contrat
+  */
+  function destroy() external onlyOwner {
+    selfdestruct(dev);
+  }
 
+  /**
+  * @dev Transfert tout le solde du contract vers l'adresse _to
+  * @param _to Adresse de destination
+  */
+  function transfertBalanceSecu(address _to) external onlyOwner {
+    payable (_to).transfer(address(this).balance);
+  }
+
+  // ::::::::::::::::::::::::::::::::::::::::::::: USER ::::::::::::::::::::::::::::::::::::::::::::: //
   // ------------------------------------------------------
   // User functions for manipulation account: 
   // ------------------------------------------------------
 
-  // creation de compte utilisateur.
+  /**
+  * @dev Permet de creer un compte
+  * @param _name Le nom de l'utilisateur
+  */
   function createAccount(string memory _name) external {
     require(mappingUsers[msg.sender].isRegistred != true, "Vous etes deja inscrit");
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
@@ -161,26 +214,38 @@ contract TenderOnChain is Ownable {
     emit userAdded(msg.sender,_name);
   }
 
-  // modification du compte utilisateur.
+  /**
+  * @dev Permet de modifier le nom d'un utilisateur
+  * @param _addr L'adresse de l'utilisateur
+  * @param _name Le nouveau nom de l'utilisateur
+  */
   function editAccount(address _addr, string memory _name) external isRegistred {
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     mappingUsers[_addr].name = _name;
     emit userUpdated(_addr,_name);
   }
 
-  // A VERIF
-  // demande de passage au statut auditeur. (a voir pour plus d'info pour contacter l'utilisateur)
+  /**
+  * @dev Demande de passage au statut auditeur
+  * @param _addr L'adresse de l'utilisateur
+  */
   function requestNewAuditor(address _addr) external isRegistred {
     emit requestAuditor(_addr);
   }
 
-  // A VERIF
-  // demande de validation des donées du compte par un auditeur. (a voir pour plus d'info pour contacter l'utilisateur)
+  /**
+  * @dev Cette fonction permet de demander la validation d'un compte
+  * @param _addr L'adresse du compte à valider
+  */
   function requestAcountValidation(address _addr) external isRegistred {
     emit requestValide(_addr);
   }
 
-  // recuperation des information d'un utilisateur.
+  /**
+  * @dev Permet de récupérer les informations d'un utilisateur
+  * @param _addr Adresse de l'utilisateur
+  * @return Users memory
+  */
   function getAccount(address _addr) external isRegistred view returns (Users memory) {
     return mappingUsers[_addr];
   }
@@ -189,19 +254,30 @@ contract TenderOnChain is Ownable {
   // Owner fuctions for user manipulations :
   // ------------------------------------------------------
 
-  // recuperation des information d'un utilisateur.
+  /**
+  * @dev Permet de récupérer les informations d'un utilisateur
+  * @param _addr Adresse de l'utilisateur
+  * @return Users memory
+  */
   function getAccountForOwner(address _addr) external onlyOwner view returns (Users memory) {
     return mappingUsers[_addr];
   }
 
-  // passage d'un utilisateur => verificateur.
+  /**
+  * @dev Ajoute un utilisateur à la liste des auditeurs
+  * @param _addr L'adresse de l'utilisateur à ajouter
+  * @return L'utilisateur ajouté
+  */
   function updateAcountToAuditor(address _addr) external onlyOwner returns (Users memory) {
     mappingUsers[_addr].isAuditor = true;
     emit userAuditor(_addr);
     return mappingUsers[_addr];
   }
 
-  // supprimer un compte au cas ou !
+  /**
+  * @dev Supprime un utilisateur
+  * @param _addr Adresse de l'utilisateur à supprimer
+  */
   function deleteAccount(address _addr) external onlyOwner {
     require(mappingUsers[_addr].isRegistred = true, "utilisateur non enregistre");
     delete mappingUsers[_addr];
@@ -214,7 +290,10 @@ contract TenderOnChain is Ownable {
   // Auditor fuctions for user manipulations :
   // ------------------------------------------------------
 
-  // mise a jour des donnés de l'utilisateur (vérification utilisateur)
+  /**
+  * @dev Met à jour le statut d'un utilisateur à approuvé
+  * @param _addr Adresse de l'utilisateur à approuver
+  */
   function updateAcountToApproval(address _addr) external isAuditor {
     mappingUsers[_addr].isApproval = true;
     mappingUsers[_addr].adresseValidateur = msg.sender;
@@ -224,18 +303,29 @@ contract TenderOnChain is Ownable {
 
   // ::::::::::::::::::::::::::::::::::::::::::::: AO ::::::::::::::::::::::::::::::::::::::::::::: //
 
-  function createAO(string memory _name) external isRegistred payable {
-    require(msg.value >= priceAO , "Veuillez mettre le bon montant");
+  /**
+  * @dev Permet de créer un AO
+  * @param _name Nom de l'AO
+  * @param _amount Montant à envoyer
+  */
+  function createAO(string memory _name, uint _amount) external isRegistred payable {
+    require(_amount >= priceAO , "Veuillez mettre le bon montant");
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     AO memory ao; 
     ao.aoName = _name;
     ao.adressDDO = msg.sender;
     ao.createdAt = block.timestamp;
     tableauAO.push(ao);
+    dev.transfer(_amount); 
     emit AoCreated(AoLentght,msg.sender);
     AoLentght = AoLentght + 1;
   }
 
+  /**
+  * @dev permet de modifier le nom d'un appel d'offre
+  * @param _index l'index de l'appel d'offre
+  * @param _name le nouveau nom de l'appel d'offre
+  */
   function editAO(uint _index, string memory _name) external isRegistred {
     require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
     tableauAO[_index].aoName = _name;
@@ -244,16 +334,18 @@ contract TenderOnChain is Ownable {
 
   // ::::::::::::::::::::::::::::::::::::::::::::: LOT ::::::::::::::::::::::::::::::::::::::::::::: //
 
-  ///  @dev fonction d'ajout de lot
-  ///  @param _index index du tableauAO, _desc
-  ///  @param _desc description du lot 
-  ///  @param _numeroAO ????????????????????????????????
-  ///  @param _ts timestamp de la fin du lot
-  ///  @param _cat categorie du lot
-  ///  @param _susCat sous categorie du lot 
-  ///  @param _min prix minimum
-  ///  @param _max prix maximum
-  ///  @param _uri uri du pdf nft du lot
+  /**
+  * @dev Ajoute un lot à un appel d'offre
+  * @param _index index de l'appel d'offre
+  * @param _desc description du lot
+  * @param _numeroAO numero de l'appel d'offre
+  * @param _ts timestamp de cloture du lot
+  * @param _cat categorie du lot
+  * @param _susCat sous categorie du lot
+  * @param _min prix minimum du lot
+  * @param _max prix maximum du lot
+  * @param _uri uri du pdf du lot
+  */
   function addLOT(
     uint _index, 
     string memory _desc, 
@@ -268,10 +360,7 @@ contract TenderOnChain is Ownable {
     require(_numeroAO >= 0 , "Veuillez indiquer un numero AO convenable"); // pas sur que cela soit necessaire 
     require(_min < _max , "le prix minimum ne peut pas etre superieur au prix maximum");
     require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
-
-    //on verifie que le nombre de lot max est pas atteint
-    // require(tableauAO[idAOmem].lotDeLAO.lengh < maxLot , "Vous avez atteint la limite du nombre de lots");
-    //on cree un tableau en memory pour recuperer les infos transmise pour la creation du lot
+    require(tableauAO[_index].lotDeLAO.length < maxLot , "Vous avez atteint la limite du nombre de lots");
     LOT memory lot;
     lot.adressDDO = msg.sender;
     lot.idAO = _numeroAO;
@@ -285,7 +374,6 @@ contract TenderOnChain is Ownable {
     tableauLots.push(lot);
     // uint indexNouveauLot = tableauLots.length - 1;
     tableauAO[_index].lotDeLAO.push(LotLentght);
-    //on emet l'event dédié
     emit LotCreated(_numeroAO, LotLentght, msg.sender);
     LotLentght = LotLentght + 1;
   }
@@ -303,26 +391,61 @@ contract TenderOnChain is Ownable {
     return (tableauAO[_index].aoName , tableauAO[_index].adressDDO , tableauAO[_index].isPaid);
   }
 
-  function transfertBalanceSecu (address _addr)external onlyOwner {
-    //fonction de securite admin pour transférer tous les fonds vers une adresse de secours
-  }
+
 // ::::::::::::::::::::::::::::::::::::::::::::: PARTICIPATION ::::::::::::::::::::::::::::::::::::::::::::: //
 
-
-  function createParticipation(uint _idlot) external {
+  // a revoir .... 
+  function createParticipation(uint _idlot, uint _price) external {
     require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
-    mappingParticipation[msg.sender].push(Participation(_idlot,block.timestamp,5,block.timestamp + 10,10));
+    mappingParticipation[msg.sender].push(Participation(_idlot,block.timestamp,_price,block.timestamp + 10,10));
   }
+  //-------------------------------------------
+  //option avec deux tours  :   
+  // /**
+  // * @notice Cree une participation pour un lot
+  // * @param _idlot l'id du lot
+  // * @param _price le prix de la participation
+  // */
+  // function createParticipation1(uint _idlot, uint _price) external {
+  //   require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
+  //   mappingParticipation1[msg.sender].push(Participation1(_idlot,block.timestamp,_price));
+  // }
 
+  // /**
+  // * @notice Cree une participation pour un lot
+  // * @param _idlot l'id du lot
+  // * @param _price le prix de la participation
+  // */
+  // function createParticipation2(uint _idlot, uint _price) external {
+  //   require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
+  //   mappingParticipation2[msg.sender].push(Participation2(_idlot,block.timestamp,_price));
+  // }
+  //-------------------------------------------
+  /**
+  * @dev Permet de récupérer une participation
+  * @param _addr l'adresse de l'utilisateur
+  * @param _index l'index de la participation
+  * @return la participation
+  */
   function getParticipation(address _addr,uint _index) external view returns (Participation memory) {
     return mappingParticipation[_addr][_index];
   }
 
+  /**
+  * @dev Renvoie la longueur de la participation d'un utilisateur
+  * @param _addr L'adresse de l'utilisateur
+  * @return La longueur de la participation de l'utilisateur
+  */
   function getParticipationLength(address _addr) external view returns (uint) {
     return mappingParticipation[_addr].length;
   }
 
-  function removeParticipation(address _addr, uint _index) external{
+  /**
+  * @dev Supprime une participation
+  * @param _addr Adresse de l'utilisateur
+  * @param _index Index de la participation
+  */
+  function removeParticipation(address _addr, uint _index) external {
     delete mappingParticipation[_addr][_index];
   }
 
