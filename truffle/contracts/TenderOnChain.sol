@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.17;
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
 /// @title TenderOnChain
 /// @author Swuib and Sebastien HOFF
@@ -14,57 +17,55 @@ contract TenderOnChain is Ownable {
     dev = payable(0x1Adb4BbA0470F24B008863E5799daa7369F62C1b);
 
   }
+
   address payable public dev;
 
-  uint8 public maxLot; //defini le nombre de lot max que peut contenir un lot
-  uint public priceAO; //defini le montant à virer pour la creation de l'AO
-  uint public priceLot; //defini le montant à virer pour la participation à un lot
+  uint8 public maxLot;          // defini le nombre de lot max que peut contenir un lot
+  uint public priceAO;          // defini le montant à virer pour la creation de l'AO
+  uint public priceLot;         // defini le montant à virer pour la participation à un lot
   uint public AoLentght;
   uint public LotLentght;
   
   /// @notice  structure des utilisateurs
   /// @dev  structure des utilisateurs
   struct Users {
-    string name; //raison sociale de la societé 
+    string name;                //raison sociale de la societé 
     //(a voir si plus de data nécessaire que juste le name)
-    bool isRegistred;// vrai si l'utilisateur est enregistré
-    bool isAuditor; // vrai si l'utilisateur est un validateur d'autentification de societés
-    //controle du profil financier par un tiers
-    bool isApproval; //est vrai si l'auditeur a fait le contrôle de cette société
-    address adresseValidateur; //adresse du controleur qui a verifié la situation du DDO
-    uint dateApprouval; // timestamp de la validation ou devalidation du DDO
+    bool isRegistred;           // vrai si l'utilisateur est enregistré
+    bool isAuditor;             // vrai si l'utilisateur est un validateur d'autentification de societés
+    bool isApproval;            // est vrai si l'auditeur a fait le contrôle de cette société
+    address adresseValidateur;  // adresse du controleur qui a verifié la situation du DDO
+    uint dateApprouval;         // timestamp de la validation ou devalidation du DDO
   }
   mapping(address => Users) mappingUsers;
 
   struct AO {
-    address adressDDO ; //adresse du DDO qui va creer AO
-    string  aoName;  // nom de AO
-    bool    isPaid; // c'est le booleen qui dit qui à bien payer pour AO (a voir ..)
-    uint[]  lotDeLAO; //contient les index des lots constituant l'ao
-    uint createdAt; // date de la creation de AO
+    address adressDDO;  // adresse du DDO qui va creer AO
+    string aoName;      // nom de AO
+    uint[] lotDeLAO;    //contient les index des lots constituant l'ao
+    uint createdAt;     // date de la creation de AO
   }
-  //creation du tableau des appels d'offre
+  // creation du tableau des appels d'offre
   AO[] public tableauAO;
 
-  //on ne peut pas faire de mapping AO/user ou AO /adress car on ne respecte plus le le critere d'unicité
+  // on ne peut pas faire de mapping AO/user ou AO /adress car on ne respecte plus le le critere d'unicité
   struct LOT {
-    address adressDDO ; //adresse du DDO qui va creer le lot
-    uint idAO;  // index de AO
+    address adressDDO ;         // adresse du DDO qui va creer le lot
+    uint idAO;                  // index de AO
     uint idLot; // ????????????????????????????????????????????????????????????
-    string description; // description ou titre du lot 
-    uint TsCloture; // timeStamp Cloture du lot
-    address winner; // adress de l'attributaire du lot
+    string description;         // description ou titre du lot 
+    uint TsCloture;             // timeStamp Cloture du lot
+    address winner;             // adress de l'attributaire du lot
     bool isNftAttributionEmit;  // si le nft d'attribution à été émit 
     bool isNftRealisationEmit;  // si le nft de réalisation à été émit 
     uint8 idEtapeLot; // ????????????????????????????????????????????????????????????
-    string categorie; // categorie du lot
-    string susCategorie; // sous categorie du lot
-    uint minprice; // prix min du lot 
-    uint maxprice; // prix max du lot 
-    string URIPDF; //URL du PDF du IPFS ou sur une SGBD dentralisée 
+    string categorie;           // categorie du lot
+    uint minprice;              // prix min du lot 
+    uint maxprice;              // prix max du lot 
+    string URIPDF;              // URL du PDF du IPFS ou sur une SGBD dentralisée 
   }
-  //creation du tableau des lots
-  //il a été choisi de stocker les lots dans un tableau car nous devons parcourir le tableau pour recuperer avec le frontend la liste des lots
+  // creation du tableau des lots
+  // il a été choisi de stocker les lots dans un tableau car nous devons parcourir le tableau pour recuperer avec le frontend la liste des lots
   LOT[] public tableauLots; 
 
   struct Participation {
@@ -76,7 +77,7 @@ contract TenderOnChain is Ownable {
   }
   mapping(address => Participation[]) mappingParticipation;
 
-  //------------------------------------------- 
+  // A TEST ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   //option avec deux tours  :
   // struct Participation1 {
   //   uint idLot;
@@ -91,8 +92,7 @@ contract TenderOnChain is Ownable {
   //   uint price;
   // }
   // mapping(address => Participation2[]) mappingParticipation2;
-  // //-------------------------------------------
-  // A TEST ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   // enum etapeAO {
   //   definitionAO,
@@ -116,13 +116,16 @@ contract TenderOnChain is Ownable {
   event userDeleted(address user);
   event userAudited(address user, address auditor, uint time);
   // Appel Offre
-  
   event AoCreated(uint indexAO , address user);
   event AoEddited(uint indexAO , address user);
-  // nouveau lot cree
+  /**
+  * @dev Event qui est déclenché lors de la création d'un lot
+  * @param indexAO index de l'AO
+  * @param indexLOT index du lot
+  * @param user adresse de l'utilisateur qui a créé le lot
+  */
   event LotCreated(uint indexAO , uint indexLOT , address user);
-  event LotEddited(uint indexLOT , address user);
-  /**u
+  /**
   * @dev Event qui se déclenche lorsque l'on reçoit de l'argent
   * @param value : montant reçu
   * @param user : adresse de l'utilisateur qui a envoyé l'argent
@@ -186,7 +189,7 @@ contract TenderOnChain is Ownable {
   * @dev Permet de détruire le contrat
   */
   function destroy() external onlyOwner {
-    selfdestruct(dev);
+    selfdestruct(dev);//a verif
   }
 
   /**
@@ -341,7 +344,6 @@ contract TenderOnChain is Ownable {
   * @param _numeroAO numero de l'appel d'offre
   * @param _ts timestamp de cloture du lot
   * @param _cat categorie du lot
-  * @param _susCat sous categorie du lot
   * @param _min prix minimum du lot
   * @param _max prix maximum du lot
   * @param _uri uri du pdf du lot
@@ -352,7 +354,6 @@ contract TenderOnChain is Ownable {
     uint _numeroAO, 
     uint _ts,
     string memory _cat,
-    string memory _susCat,
     uint _min,
     uint _max,
     string memory _uri
@@ -367,7 +368,6 @@ contract TenderOnChain is Ownable {
     lot.description = _desc;
     lot.TsCloture = _ts;
     lot.categorie = _cat;
-    lot.susCategorie = _susCat;
     lot.minprice = _min;
     lot.maxprice = _max;
     lot.URIPDF = _uri;
@@ -378,18 +378,10 @@ contract TenderOnChain is Ownable {
     LotLentght = LotLentght + 1;
   }
 
-
-  // function editLOT(uint _index, string memory _desc) external isRegistred {
-  //   require(tableauLots[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
-  //   tableauLots[_index].description = _desc;
-  //   emit LotEddited(_index,msg.sender);
-  // }
-
-
   // à quoi cela sert ??? 
-  function getAO(uint _index) public view returns (string memory _nom, address _addrDDO, bool _isPaid ) {
-    return (tableauAO[_index].aoName , tableauAO[_index].adressDDO , tableauAO[_index].isPaid);
-  }
+  // function getAO(uint _index) public view returns (string memory _nom, address _addrDDO, bool _isPaid ) {
+  //   return (tableauAO[_index].aoName , tableauAO[_index].adressDDO , tableauAO[_index].isPaid);
+  // }
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::: PARTICIPATION ::::::::::::::::::::::::::::::::::::::::::::: //
@@ -421,6 +413,7 @@ contract TenderOnChain is Ownable {
   //   mappingParticipation2[msg.sender].push(Participation2(_idlot,block.timestamp,_price));
   // }
   //-------------------------------------------
+
   /**
   * @dev Permet de récupérer une participation
   * @param _addr l'adresse de l'utilisateur
@@ -458,15 +451,15 @@ contract TenderOnChain is Ownable {
     
   // }
 
-  // function createNftForParticipation() {
+  // function createNftForParticipation(address _participant) external isRegistred {
 
   // }
 
-  // function createNftForWinner() {
+  // function createNftForWinner(address _participant) external isRegistred {
 
   // }
 
-  // function createNftForWinnerAndAchivment() {
+  // function createNftForWinnerAndAchivment(address _participant) external isRegistred {
 
   // }
 
