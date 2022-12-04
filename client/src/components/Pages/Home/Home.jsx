@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEth } from '../../../contexts/EthContext';
 import toast from 'react-hot-toast';
@@ -7,65 +6,34 @@ import Header from '../../Layout/Header/Header';
 import NavInfo from '../../Layout/NavInfo/NavInfo';
 import './home.css';
 import Loader from '../../Layout/Loader/Loader';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../../contexts/Redux/actions/init.actions';
-// import { useEffect } from 'react';
 
 const Home = () => {
-    const { state: { contract, accounts } } = useEth();
-    const { user:{ name }, userErr:{ userError } } = useSelector((state) => state);
+    const { state: { contract, accounts , userInfo, userErr } } = useEth();
     const [nameForm, setNameForm] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
-    console.log('Home Page');
-    // console.log('userconnected : ' + userConnected);
-    // console.log('isRegistred : ' + isRegistred);
-    console.log('userError : ' + userError);
-    console.log(contract);
-
-    // useEffect(() => {
-    //     if (contract !== undefined && contract !== null && accounts !== null) {
-    //         // if (isRegistred === true) {
-    //             const fetchData = async () => {
-    //                 await contract.methods.getAccount(accounts).call({from: accounts }).then( res => {
-    //                     dispatch(setUser(res));
-    //                     dispatch(setUserErr(""));
-    //                 }).catch(error => {
-    //                     const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
-    //                     dispatch(setUserErr(errorObject.message.replace("VM Exception while processing transaction: revert ", "")));
-    //                 });
-    //             };
-    //             fetchData();
-    //         // }
-    //     }
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [accounts]);
-    
+    useEffect(() => {
+        if (accounts !== null) {
+            if (userInfo !== null) {
+                if (userErr === "") {
+                    navigate(`/Account/${userInfo.name}`);
+                }
+            }
+        }
+    }, [navigate, userInfo, accounts, userErr]);
 
     const handelCreate = async e => {
         setLoading(true);
         e.preventDefault();
         await contract.methods.createAccount(nameForm).send({ from: accounts }).then( async res => {
-            // const resProposalId = parseInt(res.events.Voted.returnValues.proposalId, 10);
-            // const add = res.from;
-            // console.log(res.events.userAdded.returnValues.name);
-            // setRegisteredAdress(
-            //     Object.values({
-            //     ...RegisteredAdress, [UserIndexForRegisteredAdress]: 
-            //     {...RegisteredAdress[UserIndexForRegisteredAdress],address:add.toLowerCase(), voteCount: resProposalId }}));
-            // setProposalData(
-            //     Object.values({
-            //     ...ProposalData, [vote]: 
-            //     {...ProposalData[vote], voteCount: voteCountProposal +1 }}));
-            // setUserInfo({hasVoted:true, isRegistered:userInfo.isRegistered, votedProposalId:`${vote}`});
-            const resUser = await contract.methods.getAccount(accounts).call({ from: accounts });
-            dispatch(setUser(resUser));
+            console.log(res);
             toast(`Compte ${res.events.userAdded.returnValues.name} enregisté !`,
             {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
+            // setTimeout(() => {
+            // }, 3000);
+            window.location.reload();
             setLoading(false);
-            navigate(`/Account/${res.events.userAdded.returnValues.name}`);
         }).catch(error => {
             if(error.code === 4001)
                 toast(`${error.message}`,
@@ -98,33 +66,38 @@ const Home = () => {
                             privé améliorant la transparence, la sécurité des procédures 
                             et la concurrence grâce à la technologie blockchain.</p>
                         </div>
+                        <div className="rigth-container">
                         {accounts !== null ? (
                             <>
-                                {userError === '' ? 
-                                    navigate(`/Account/${name}`)
-                                : (
-                                    <div className="rigth-container">
+                                {userErr === "You're not a user" ? (
+                                    <div className='rigth-sub-container'>
                                         <p className='title-label'>Créer un compte</p>
                                         <form onSubmit={handelCreate}>
-                                            <label htmlFor="exampleInputEmail1">Nom de votre entreprise </label>
-                                            <input type="text" name="address" id="address" className="form-control" required onChange={e =>setNameForm(e.target.value)}/>
+                                            <label htmlFor="name">Nom de votre entreprise </label>
+                                            <input type="text" name="name" id="name" className="form-control" required onChange={e =>setNameForm(e.target.value)}/>
                                             <div className="btn-group">
                                                 {loading ? (
-                                                    <Loader size={"small"}/>
+                                                    <button  className="myButton" type=""><Loader size={"small"}/></button>
                                                 ) : (
                                                     <button  className="myButton" type="submit">Creer votre compte</button>
                                                 )}
                                             </div>
                                         </form>
                                     </div>
+                                ) : (
+                                    <Loader size={"small"}/>
+                                    // <>
+                                    //     {navigate(`/Account/${userInfo.name}`)}
+                                    // </>
                                 )}
                             </>
-                        ) : (
-                            <div className="rigth-container">
-                                <p className='title-label'>Se connecter</p>
-                                <button className="add-button" onClick={connect}>Connect MetaMask</button>
+                            ) : (
+                            <div className='rigth-sub-container'>
+                                {/* <p className='title-label'>Se connecter</p> */}
+                                <button className="myButton" onClick={connect}>Se connecter (MetaMask)</button>
                             </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </section>
             </main>

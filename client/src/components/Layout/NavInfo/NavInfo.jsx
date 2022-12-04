@@ -3,7 +3,7 @@ import React from 'react';
 import './navinfo.css'
 
 const NavInfo = () => {
-    console.log(window.location.pathname);
+    // console.log(window.location.pathname);
     return (
         <div id='nav-info'>
             <p>{window.location.pathname}</p>

@@ -14,9 +14,11 @@ contract TenderOnChain is Ownable {
   }
 
 
-  uint8 maxLot ; //defini le nombre de lot max que peut contenir un lot
-  uint priceAO ; //defini le montant à virer pour la creation de l'AO
-  uint priceLot ; //defini le montant à virer pour la participation à un lot
+  uint8 public maxLot; //defini le nombre de lot max que peut contenir un lot
+  uint public priceAO; //defini le montant à virer pour la creation de l'AO
+  uint public priceLot; //defini le montant à virer pour la participation à un lot
+  uint public AoLentght;
+  uint public LotLentght;
   
   /// @notice  structure des utilisateurs
   /// @dev  structure des utilisateurs
@@ -45,14 +47,19 @@ contract TenderOnChain is Ownable {
 
   //on ne peut pas faire de mapping AO/user ou AO /adress car on ne respecte plus le le critere d'unicité
   struct LOT {
-    uint idAO;
-    uint idLot;
-    string description;
-    uint TsCloture; //timeStampCloture
-    address winner; //adress de l'attributaire du lot
-    bool isNftAttributionEmit;
-    bool isNftRealisationEmit;
-    uint8 idEtapeLot;
+    address adressDDO ; //adresse du DDO qui va creer le lot
+    uint idAO;  // index de AO
+    uint idLot; // ????????????????????????????????????????????????????????????
+    string description; // description ou titre du lot 
+    uint TsCloture; // timeStamp Cloture du lot
+    address winner; // adress de l'attributaire du lot
+    bool isNftAttributionEmit;  // si le nft d'attribution à été émit 
+    bool isNftRealisationEmit;  // si le nft de réalisation à été émit 
+    uint8 idEtapeLot; // ????????????????????????????????????????????????????????????
+    string categorie; // categorie du lot
+    string susCategorie; // sous categorie du lot
+    uint minprice; // prix min du lot 
+    uint maxprice; // prix max du lot 
     string URIPDF; //URL du PDF du IPFS ou sur une SGBD dentralisée 
   }
   //creation du tableau des lots
@@ -92,10 +99,12 @@ contract TenderOnChain is Ownable {
   event userAuditor(address user);
   event userDeleted(address user);
   event userAudited(address user, address auditor, uint time);
-  // nouvel Appel Offre
+  // Appel Offre
   event AoCreated(uint indexAO , address user);
+  event AoEddited(uint indexAO , address user);
   // nouveau lot cree
   event LotCreated(uint indexAO , uint indexLOT , address user);
+  event LotEddited(uint indexLOT , address user);
   // argent recu
   event argentRecu(uint value , address user);
 
@@ -105,13 +114,13 @@ contract TenderOnChain is Ownable {
 
   // verifie si l'utilisateur à bien creer son compte.
   modifier isRegistred() {
-    require(mappingUsers[msg.sender].isRegistred, "You're not a user");
+    require(mappingUsers[msg.sender].isRegistred, "Vous n'etes pas un utilisateur");
     _;
   }
 
   // verifie si l'utilisateur est un utilisateur verificateur.
   modifier isAuditor() {
-    require(mappingUsers[msg.sender].isAuditor, "You're not a auditor");
+    require(mappingUsers[msg.sender].isAuditor, "Vous n'etes pas un auditeur");
     _;
   }
 
@@ -145,8 +154,8 @@ contract TenderOnChain is Ownable {
 
   // creation de compte utilisateur.
   function createAccount(string memory _name) external {
-    require(mappingUsers[msg.sender].isRegistred != true, "Already registered");
-    require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "You can't put nothing as a name");
+    require(mappingUsers[msg.sender].isRegistred != true, "Vous etes deja inscrit");
+    require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     mappingUsers[msg.sender].isRegistred = true;
     mappingUsers[msg.sender].name = _name;
     emit userAdded(msg.sender,_name);
@@ -154,7 +163,7 @@ contract TenderOnChain is Ownable {
 
   // modification du compte utilisateur.
   function editAccount(address _addr, string memory _name) external isRegistred {
-    require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "You can't put nothing as a name");
+    require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     mappingUsers[_addr].name = _name;
     emit userUpdated(_addr,_name);
   }
@@ -194,7 +203,7 @@ contract TenderOnChain is Ownable {
 
   // supprimer un compte au cas ou !
   function deleteAccount(address _addr) external onlyOwner {
-    require(mappingUsers[_addr].isRegistred = true, "user not registered");
+    require(mappingUsers[_addr].isRegistred = true, "utilisateur non enregistre");
     delete mappingUsers[_addr];
     emit userDeleted(_addr);
   }
@@ -213,57 +222,85 @@ contract TenderOnChain is Ownable {
     emit userAudited(_addr, msg.sender, block.timestamp);
   }
 
-
   // ::::::::::::::::::::::::::::::::::::::::::::: AO ::::::::::::::::::::::::::::::::::::::::::::: //
 
-  function createAO(address _addr, string memory _name) external isRegistred payable {
+  function createAO(string memory _name) external isRegistred payable {
     require(msg.value >= priceAO , "Veuillez mettre le bon montant");
-    //require le montant de la transaction est ok
+    require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     AO memory ao; 
     ao.aoName = _name;
-    ao.adressDDO = _addr;
+    ao.adressDDO = msg.sender;
     ao.createdAt = block.timestamp;
     tableauAO.push(ao);
+    emit AoCreated(AoLentght,msg.sender);
+    AoLentght = AoLentght + 1;
   }
 
   function editAO(uint _index, string memory _name) external isRegistred {
     require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
     tableauAO[_index].aoName = _name;
+    emit AoEddited(_index,msg.sender);
   }
 
   // ::::::::::::::::::::::::::::::::::::::::::::: LOT ::::::::::::::::::::::::::::::::::::::::::::: //
 
-  // ajoute un lot
-  function addLOT(string memory _name, uint _numeroAO) external isRegistred  {
-    //le 0 étant l'index de depart on transmet un numeroAO = 1 pour index 0
-    //controle des requires
-    require(_numeroAO > 0 , "Veuillez indiquer un numero AO");
+  ///  @dev fonction d'ajout de lot
+  ///  @param _index index du tableauAO, _desc
+  ///  @param _desc description du lot 
+  ///  @param _numeroAO ????????????????????????????????
+  ///  @param _ts timestamp de la fin du lot
+  ///  @param _cat categorie du lot
+  ///  @param _susCat sous categorie du lot 
+  ///  @param _min prix minimum
+  ///  @param _max prix maximum
+  ///  @param _uri uri du pdf nft du lot
+  function addLOT(
+    uint _index, 
+    string memory _desc, 
+    uint _numeroAO, 
+    uint _ts,
+    string memory _cat,
+    string memory _susCat,
+    uint _min,
+    uint _max,
+    string memory _uri
+    ) external isRegistred  {
+    require(_numeroAO >= 0 , "Veuillez indiquer un numero AO convenable"); // pas sur que cela soit necessaire 
+    require(_min < _max , "le prix minimum ne peut pas etre superieur au prix maximum");
+    require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
+
     //on verifie que le nombre de lot max est pas atteint
     // require(tableauAO[idAOmem].lotDeLAO.lengh < maxLot , "Vous avez atteint la limite du nombre de lots");
-    uint  idAOmem = _numeroAO-1 ;
     //on cree un tableau en memory pour recuperer les infos transmise pour la creation du lot
     LOT memory lot;
-    lot.description = _name;
-    lot.idAO = idAOmem;
-    //on l'ajout au tableau des lots
+    lot.adressDDO = msg.sender;
+    lot.idAO = _numeroAO;
+    lot.description = _desc;
+    lot.TsCloture = _ts;
+    lot.categorie = _cat;
+    lot.susCategorie = _susCat;
+    lot.minprice = _min;
+    lot.maxprice = _max;
+    lot.URIPDF = _uri;
     tableauLots.push(lot);
-    //on capte l'index de ce nouveau lot
-    uint indexNouveauLot = tableauLots.length -1 ;
-    //on le stocke également dans la definition des idex des lots de l'AO
-    tableauAO[idAOmem].lotDeLAO.push(indexNouveauLot);
+    // uint indexNouveauLot = tableauLots.length - 1;
+    tableauAO[_index].lotDeLAO.push(LotLentght);
     //on emet l'event dédié
-    //emit LOTcree(idAOmem, indexNouveauLot, emetteur) ;
-  }
-
-  
-  function editLOT(uint _idx, string memory _name) external isRegistred {
-    require( tableauAO[_idx].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
-    tableauAO[_idx].aoName = _name ;
+    emit LotCreated(_numeroAO, LotLentght, msg.sender);
+    LotLentght = LotLentght + 1;
   }
 
 
-  function getAO(uint _idx) public view returns (string memory _nom, address _addrDDO, bool _isPaid ) {
-    return (tableauAO[_idx].aoName , tableauAO[_idx].adressDDO , tableauAO[_idx].isPaid ) ;
+  // function editLOT(uint _index, string memory _desc) external isRegistred {
+  //   require(tableauLots[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
+  //   tableauLots[_index].description = _desc;
+  //   emit LotEddited(_index,msg.sender);
+  // }
+
+
+  // à quoi cela sert ??? 
+  function getAO(uint _index) public view returns (string memory _nom, address _addrDDO, bool _isPaid ) {
+    return (tableauAO[_index].aoName , tableauAO[_index].adressDDO , tableauAO[_index].isPaid);
   }
 
   function transfertBalanceSecu (address _addr)external onlyOwner {
@@ -273,6 +310,7 @@ contract TenderOnChain is Ownable {
 
 
   function createParticipation(uint _idlot) external {
+    require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
     mappingParticipation[msg.sender].push(Participation(_idlot,block.timestamp,5,block.timestamp + 10,10));
   }
 
@@ -287,7 +325,6 @@ contract TenderOnChain is Ownable {
   function removeParticipation(address _addr, uint _index) external{
     delete mappingParticipation[_addr][_index];
   }
-
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::: NFT :::::::::::::::::::::::::::::::::::::::::::::::::: //

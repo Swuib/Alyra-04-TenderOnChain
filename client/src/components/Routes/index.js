@@ -4,16 +4,16 @@ import Account from '../Pages/Account/Account';
 import CreateAccount from '../Pages/CreateAccount/CreateAccount';
 
 // import OwnerRoute from './OwnerRoute';
-// import RegisterAddProposalRoute from './RegisterAddProposalRoute';
-// import OwnerOrVoterRoute from './OwnerOrVoterRoute';
-// import OwnerAddUserRoute from './OwnerAddUserRoute';
+import UserRegisteredRoute from './UserRegisteredRoute';
 
 import Home from '../Pages/Home/Home';
-// import AddUser from '../Pages/AddUser/AddUser';
-// import WorkFlow from '../Pages/Workflow/WorkFlow';
-// import AddProposal from '../Pages/AddProposal/AddProposal';
-// import Proposal from '../Pages/Proposal/Proposal';
-// import Statistics from '../Pages/Statistics/Statistics';
+import MyAo from '../Pages/MyAo/MyAo';
+import MySoum from '../Pages/MySoum/MySoum';
+import CreateAo from '../Pages/CreateAo/CreateAo';
+import Soum from '../Pages/Soum/Soum';
+
+import Auditor from '../Pages/Auditor/Auditor';
+import Owner from '../Pages/Owner/Owner';
 
 const index = () => { 
     return (
@@ -21,14 +21,15 @@ const index = () => {
             <Routes >
                 <Route index element={<Home />}/>
                 <Route path="/createAccount" element={<CreateAccount />}/>
-                <Route path="/Account/:id" element={<Account />}/>
+                <Route path="/Account/:id" element={<UserRegisteredRoute><Account /></UserRegisteredRoute>}/>
+                
+                <Route path="/Account/:id/MyAO" element={<UserRegisteredRoute><MyAo /></UserRegisteredRoute>}/>
+                <Route path="/Account/:id/CreateAO" element={<UserRegisteredRoute><CreateAo /></UserRegisteredRoute>}/>
+                <Route path="/Account/:id/MySoum" element={<UserRegisteredRoute><MySoum /></UserRegisteredRoute>}/>
+                <Route path="/Account/:id/Soum" element={<UserRegisteredRoute><Soum /></UserRegisteredRoute>}/>
 
-                {/* <Route path="/addUser" element={<OwnerAddUserRoute><AddUser /></OwnerAddUserRoute>}/>
-                <Route path="/WorkFlow" element={<OwnerRoute><WorkFlow /></OwnerRoute>}/>
-                <Route path="/Statistics" element={<OwnerRoute><Statistics /></OwnerRoute>}/>
-
-                <Route path="/addProposal" element={<RegisterAddProposalRoute><AddProposal /></RegisterAddProposalRoute>}/>
-                <Route path="/Proposal" element={<OwnerOrVoterRoute><Proposal /></OwnerOrVoterRoute>}/> */}
+                <Route path="/Auditor" element={<UserRegisteredRoute><Auditor /></UserRegisteredRoute>}/>
+                <Route path="/Owner" element={<UserRegisteredRoute><Owner /></UserRegisteredRoute>}/>
 
                 <Route path="*" element={<Navigate _replace_ to="/" />} />
             </Routes>
