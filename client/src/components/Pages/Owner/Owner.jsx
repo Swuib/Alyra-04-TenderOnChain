@@ -7,7 +7,7 @@ const Owner = () => {
         <>
             <Header/>
             <main>
-                <section>
+                <section className="section-nav">
                     <NavInfo />
                 </section>
                 <section>

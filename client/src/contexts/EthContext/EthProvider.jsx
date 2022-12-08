@@ -1,7 +1,6 @@
 import React, { useReducer, useCallback, useEffect } from "react";
-// import { useState } from "react";
 import Web3 from "web3";
-// import { useLocalStorage } from "../../components/Utils/Utils";
+import { ConvertEpochToLocalDate } from "../../components/Utils/Utils";
 import EthContext from "./EthContext";
 import { reducer, actions, initialState } from "./state";
 
@@ -11,20 +10,17 @@ function EthProvider({ children }) {
   const init = useCallback(
     async artifact => {
       if (artifact) {
+        const networkIDValid = 5777; // change for deploy <===========================================================
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-
+        let waiting = true;
         async function isMetaMaskConnected() {
           const {ethereum} = window;
           let accounts = await ethereum.request({method: 'eth_accounts'});
-          let owner,priceAO,priceLot,userErr,userInfo;
+          let owner = null, priceAO = null, priceLot = null, userErr = null, userInfo = null, aoLength = null, lotLength = null, userLength=null;
+          let arrayAo = [], arrayLot = [], myArrayAoId = [], myArrayLotId = [], myArrayAo = [], myArrayLot = [], myParticipation = [];
           
           if (accounts.length === 1) {
             accounts = accounts[0].toLowerCase();
-            // owner
-            owner = await contract.methods.owner().call({ from: accounts });
-            owner = owner.toLowerCase();
-            priceAO = await contract.methods.priceAO().call({ from: accounts });
-            priceLot = await contract.methods.priceLot().call({ from: accounts });
             // user Info / user error
             await contract.methods.getAccount(accounts).call({from: accounts }).then( res => {
               userInfo = {
@@ -33,7 +29,10 @@ function EthProvider({ children }) {
                 isAuditor:res.isAuditor,
                 isApproval:res.isApproval,
                 dateApprouval:res.dateApprouval,
-                adresseValidateur:res.adresseValidateur
+                adresseValidateur:res.adresseValidateur,
+                countNFTReal:Number(res.countNFTReal),
+                countNFTWinner:Number(res.countNFTWinner),
+                countParticipation:Number(res.countParticipation)
               };
               userErr = "";
             }).catch(error => {
@@ -44,19 +43,171 @@ function EthProvider({ children }) {
                 isAuditor: null,
                 isApproval: null,
                 dateApprouval: null,
-                adresseValidateur: null
+                adresseValidateur: null,
+                countNFTReal:null,
+                countNFTWinner:null,
+                countParticipation:null
               };
               userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
             });
+            if (userErr === "") {
+
+              let oldEventsAccount = await contract.getPastEvents('userAdded', {fromBlock: 0,toBlock: 'latest'});
+              
+              // owner
+              owner = await contract.methods.owner().call({ from: accounts });
+              owner = owner.toLowerCase();
+              // price AO
+              priceAO = await contract.methods.priceAO().call({ from: accounts });
+              // price LOT
+              priceLot = await contract.methods.priceLot().call({ from: accounts });
+              // Ao length
+              aoLength= await contract.methods.aoLength().call({ from: accounts });
+              aoLength = Number(aoLength);
+              // Lot length
+              lotLength = await contract.methods.lotLength().call({ from: accounts });
+              lotLength = Number(lotLength);
+              // Lot length
+              userLength = await contract.methods.lotLength().call({ from: accounts });  //<---------------------
+              userLength = Number(userLength);
+
+              if (aoLength > 0) {
+                for (let i = 0; i < aoLength; i++) {
+                  const respAo = await contract.methods.arrayAO(i).call({ from: accounts });
+                  arrayAo.push({
+                    index:i,
+                    adressDDO:respAo.adressDDO, 
+                    aoName:respAo.aoName, 
+                    createdAt:ConvertEpochToLocalDate(respAo.createdAt), 
+                    isOpen:respAo.isOpen, 
+                    lastLotId: Number(respAo.lastLotId)
+                  });
+                  if (accounts === respAo.adressDDO.toLowerCase()) {
+                    myArrayAoId.push(i);
+                    myArrayAo.push({
+                      index:i,
+                      adressDDO:respAo.adressDDO, 
+                      aoName:respAo.aoName , 
+                      createdAt:ConvertEpochToLocalDate(respAo.createdAt), 
+                      isOpen:respAo.isOpen, 
+                      lastLotId: Number(respAo.lastLotId)
+                    });
+                  };
+                };
+              };
+  
+              if (lotLength > 0) {
+                for (let i = 0; i < lotLength; i++) {
+                  const respLot = await contract.methods.getArrayLots(i).call({ from: accounts });
+                    for (let a = 0; a < arrayAo.length; a++) {
+                      if (arrayAo[a].adressDDO === respLot.adressDDO) {
+                        if (oldEventsAccount.length > 0) {
+                          for (let b = 0; b < oldEventsAccount.length; b++) {
+                            if (oldEventsAccount[b].returnValues.user === respLot.adressDDO) {
+                              arrayLot.push({
+                                index:i,
+                                name: oldEventsAccount[b].returnValues.name, 
+                                adressDDO:respLot.adressDDO,
+                                aoName:arrayAo[a].aoName, 
+                                description:respLot.description,
+                                idAO:Number(respLot.idAO),
+                                minprice:Number(respLot.minprice), 
+                                maxprice:Number(respLot.maxprice), 
+                                partLengt:Number(respLot.partLengt), 
+                                participants:respLot.part, 
+                                categorie:respLot.categorie, 
+                                susCategorie:respLot.susCategorie, 
+                                TsCloture:ConvertEpochToLocalDate(respLot.TsCloture), 
+                                isNftAttributionEmit:respLot.isNftAttributionEmit, 
+                                isNftRealisationEmit:respLot.isNftRealisationEmit,
+                                // TsAtt:ConvertEpochToLocalDate(respLot.TsAtt),
+                                winner:respLot.winner, 
+                                uriPdf:respLot.URIPDF
+                              });
+                              if (accounts === respLot.adressDDO.toLowerCase()) {
+                                myArrayLotId.push(i);
+                                myArrayLot.push({
+                                  index:i,
+                                  name:oldEventsAccount[b].returnValues.name, 
+                                  adressDDO:respLot.adressDDO,
+                                  aoName:arrayAo[a].aoName, 
+                                  description:respLot.description,
+                                  idAO:Number(respLot.idAO),
+                                  minprice:Number(respLot.minprice), 
+                                  maxprice:Number(respLot.maxprice), 
+                                  partLengt:Number(respLot.partLengt), 
+                                  participants:respLot.part, 
+                                  categorie:respLot.categorie, 
+                                  susCategorie:respLot.susCategorie, 
+                                  TsCloture:ConvertEpochToLocalDate(respLot.TsCloture), 
+                                  isNftAttributionEmit:respLot.isNftAttributionEmit, 
+                                  isNftRealisationEmit:respLot.isNftRealisationEmit, 
+                                  // TsAtt:ConvertEpochToLocalDate(respLot.TsAtt), 
+                                  winner:respLot.winner, 
+                                  uriPdf:respLot.URIPDF
+                                });
+                              };
+                            }
+                          }
+                        }
+                      };
+                    };
+                };
+              };
+
+              if (userInfo.countParticipation > 0 ) {
+                for (let i = 0; i < userInfo.countParticipation; i++) {
+                  const resParticipation = await contract.methods.getMyParticipation(i).call({ from: accounts });
+                  myParticipation.push({
+                    Tsprice1:ConvertEpochToLocalDate(resParticipation.Tsprice1),
+                    idLot:Number(resParticipation.idLot),
+                    isRealisation:resParticipation.isRealisation,
+                    isWinner:resParticipation.isWinner,
+                    price1:Number(resParticipation.price1)
+                  });
+                };
+              };
+            };
         } else {
-            accounts = null;
-            userInfo = null;
-            userErr = null;
+          owner = null;
+          accounts = null;
+          userInfo = null;
+          userErr = null;
+          priceLot = null;
+          priceAO = null;
+          aoLength = null;
+          lotLength = null;
+          userLength = null;
+          arrayAo = [];
+          arrayLot = [];
+          myArrayAoId = [];
+          myArrayAo = [];
+          myArrayLotId = [];
+          myArrayLot = [];
+          myParticipation = [];
         };
-          return {accounts, owner, priceAO,priceLot, userErr, userInfo}
+          return {
+            accounts, 
+            owner, 
+            priceAO,
+            priceLot, 
+            userErr, 
+            userInfo, 
+            aoLength, 
+            lotLength, 
+            userLength, 
+            arrayAo, 
+            arrayLot,
+            myArrayAoId,
+            myArrayAo,
+            myArrayLotId,
+            myArrayLot,
+            myParticipation
+          }
         };
         
         const networkID = await web3.eth.net.getId();
+        
         const { abi } = artifact;
 
         let address, contract;
@@ -65,12 +216,30 @@ function EthProvider({ children }) {
           address = artifact.networks[networkID].address;
           // contract
           contract = new web3.eth.Contract(abi, address);
+          
         } catch (err) {
           console.error(err);
         }
 
-        const {accounts, owner, priceAO, priceLot, userErr, userInfo} = await isMetaMaskConnected();
-
+        const {
+          accounts, 
+          owner, 
+          priceAO, 
+          priceLot, 
+          userErr, 
+          userInfo, 
+          aoLength, 
+          lotLength, 
+          userLength, 
+          arrayAo, 
+          arrayLot,
+          myArrayAoId,
+          myArrayAo,
+          myArrayLotId,
+          myArrayLot,
+          myParticipation
+        } = await isMetaMaskConnected();
+        waiting = false;
         dispatch({
           type: actions.init,
           data: { 
@@ -83,7 +252,19 @@ function EthProvider({ children }) {
             priceAO,
             priceLot,
             userInfo,
-            userErr
+            userErr,
+            aoLength,
+            arrayAo,
+            lotLength,
+            userLength,
+            arrayLot,
+            myArrayAoId,
+            myArrayAo,
+            myArrayLotId,
+            myArrayLot,
+            waiting,
+            networkIDValid,
+            myParticipation
           }
         });
       }
@@ -107,7 +288,6 @@ function EthProvider({ children }) {
     const events = ["chainChanged", "accountsChanged"];
     const handleChange = () => {
       init(state.artifact);
-      // window.location.reload();
     };
 
     events.forEach(e => window.ethereum.on(e, handleChange));
@@ -119,7 +299,8 @@ function EthProvider({ children }) {
   return (
     <EthContext.Provider value={{
       state,
-      dispatch
+      dispatch,
+      init
     }}>
       {children}
     </EthContext.Provider>

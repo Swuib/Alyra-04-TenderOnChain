@@ -21,17 +21,16 @@ const Home = () => {
                 }
             }
         }
-    }, [navigate, userInfo, accounts, userErr]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [accounts]);
 
-    const handelCreate = async e => {
+    const handleCreate = async e => {
         setLoading(true);
         e.preventDefault();
         await contract.methods.createAccount(nameForm).send({ from: accounts }).then( async res => {
             console.log(res);
             toast(`Compte ${res.events.userAdded.returnValues.name} enregisté !`,
             {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
-            // setTimeout(() => {
-            // }, 3000);
             window.location.reload();
             setLoading(false);
         }).catch(error => {
@@ -56,7 +55,7 @@ const Home = () => {
         <>
             <Header/>
             <main>
-                <section>
+                <section className="section-nav">
                     <NavInfo />
                 </section>
                 <section>
@@ -72,7 +71,7 @@ const Home = () => {
                                 {userErr === "Vous n'etes pas un utilisateur" ? (
                                     <div className='rigth-sub-container'>
                                         <p className='title-label'>Créer un compte</p>
-                                        <form onSubmit={handelCreate}>
+                                        <form onSubmit={handleCreate}>
                                             <label htmlFor="name">Nom de votre entreprise </label>
                                             <input type="text" name="name" id="name" className="form-control" required onChange={e =>setNameForm(e.target.value)}/>
                                             <div className="btn-group">
@@ -86,9 +85,6 @@ const Home = () => {
                                     </div>
                                 ) : (
                                     <Loader size={"small"}/>
-                                    // <>
-                                    //     {navigate(`/Account/${userInfo.name}`)}
-                                    // </>
                                 )}
                             </>
                             ) : (

@@ -1,0 +1,33 @@
+#main-container-account{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 50%);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+#top-account-container{
+    width: 100%;
+    height: 100%;
+}
+#bottom-account-container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: 1fr;
+    justify-content: space-around;
+}
+#left-account-container {
+    margin: 5%;
+}
+#left-account-container button{
+    margin: 5%;
+}
+#rigth-account-container {
+    margin: 5%;
+}
+#rigth-account-container button{
+    margin: 5%;
+}

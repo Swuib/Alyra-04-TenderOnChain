@@ -7,7 +7,7 @@ const Auditor = () => {
         <>
             <Header />
             <main>
-                <section>
+                <section className="section-nav">
                     <NavInfo />
                 </section>
                 <section>

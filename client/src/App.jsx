@@ -1,18 +1,12 @@
 import "./App.css";
 import { useEth } from "./contexts/EthContext";
-// import { useEffect } from "react";
 import { Toaster } from 'react-hot-toast';
 import Routes from './components/Routes';
-// import { useDispatch } from 'react-redux';
-// import { clearData, setOwner, setUser, setUserErr } from "./contexts/Redux/actions/init.actions";
 
 const App = () => {
-  // const dispatch = useDispatch();
-  const { state: { contract, accounts, networkID, owner, priceAO, priceLot, userInfo, userErr } } = useEth();
+  const  {state}  = useEth();
   console.log('-----------------------APP-----------------------');
-  console.log(contract, accounts, networkID, owner, priceAO, priceLot);
-  console.log(userInfo,userErr);
-
+  console.log(state);
   return (
     <>
     <Toaster

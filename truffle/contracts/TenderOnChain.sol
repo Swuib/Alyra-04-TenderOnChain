@@ -1,113 +1,85 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.17;
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
 /// @title TenderOnChain
 /// @author Swuib and Sebastien HOFF
 /// @notice This contract ...
-contract TenderOnChain is Ownable {
+contract TenderOnChain is ERC721URIStorage {
 
-  constructor() {
-    maxLot = 30;
-    priceAO = 1 ether;
-    priceLot = 100000000000000000 wei; 
-    dev = payable(0x1Adb4BbA0470F24B008863E5799daa7369F62C1b);
+  constructor() ERC721("TENDERONCHAIN", "TOC") {}
 
-  }
+  address public owner = msg.sender;                                                // adresse du proprietaire du contract
+  address payable public dev = payable(0x1Adb4BbA0470F24B008863E5799daa7369F62C1b); // adrress du developpeur 1
 
-  address payable public dev;
+  uint8 private maxLot = 30;                      // defini le nombre de lot max que peut contenir un lot
+  uint private NftId;                             // defini l'id du nft
+  uint public priceAO = 1 ether;                  // defini le montant à virer pour la creation de l'AO
+  uint public priceLot = 100000000000000000 wei;  // defini le montant à virer pour la participation à un lot
+  uint public aoLength;                           // defini le nombre total AO
+  uint public lotLength;                          // defini le nombre total de lot
+  uint public userLength;                         // defini le nombre total d'utilisateur
 
-  uint8 public maxLot;          // defini le nombre de lot max que peut contenir un lot
-  uint public priceAO;          // defini le montant à virer pour la creation de l'AO
-  uint public priceLot;         // defini le montant à virer pour la participation à un lot
-  uint public AoLentght;
-  uint public LotLentght;
   
   /// @notice  structure des utilisateurs
   /// @dev  structure des utilisateurs
   struct Users {
     string name;                //raison sociale de la societé 
-    //(a voir si plus de data nécessaire que juste le name)
     bool isRegistred;           // vrai si l'utilisateur est enregistré
     bool isAuditor;             // vrai si l'utilisateur est un validateur d'autentification de societés
     bool isApproval;            // est vrai si l'auditeur a fait le contrôle de cette société
     address adresseValidateur;  // adresse du controleur qui a verifié la situation du DDO
     uint dateApprouval;         // timestamp de la validation ou devalidation du DDO
+    uint countNFTWinner;        // count du nombre de lot gagné
+    uint countNFTReal;          // count du nombre de lot réalisé
+    uint countParticipation;    // count du nombre des participations
   }
-  mapping(address => Users) mappingUsers;
-
+  
   struct AO {
     address adressDDO;  // adresse du DDO qui va creer AO
     string aoName;      // nom de AO
-    uint[] lotDeLAO;    //contient les index des lots constituant l'ao
+    uint8 lastLotId;    // le dernier numero de lot creer
+    uint[] lotDeLAO;    // contient les index des lots constituant l'ao
     uint createdAt;     // date de la creation de AO
+    bool isOpen;        // permet de savoir l'état de l'AO
   }
-  // creation du tableau des appels d'offre
-  AO[] public tableauAO;
-
-  // on ne peut pas faire de mapping AO/user ou AO /adress car on ne respecte plus le le critere d'unicité
+  
   struct LOT {
     address adressDDO ;         // adresse du DDO qui va creer le lot
     uint idAO;                  // index de AO
-    uint idLot; // ????????????????????????????????????????????????????????????
     string description;         // description ou titre du lot 
     uint TsCloture;             // timeStamp Cloture du lot
     address winner;             // adress de l'attributaire du lot
-    bool isNftAttributionEmit;  // si le nft d'attribution à été émit 
-    bool isNftRealisationEmit;  // si le nft de réalisation à été émit 
-    uint8 idEtapeLot; // ????????????????????????????????????????????????????????????
+    bool isNftAttributionEmit;  // si le nft d'attribution à été émit
+    bool isNftRealisationEmit;  // si le nft de réalisation à été émit
+    uint TsAtt;                 // timeStamp d'attribution du lot
     string categorie;           // categorie du lot
+    string susCategorie;        // sous categorie du lot
+    string URIPDF;              // URL du PDF du IPFS ou sur une SGBD dentralisée 
     uint minprice;              // prix min du lot 
     uint maxprice;              // prix max du lot 
-    string URIPDF;              // URL du PDF du IPFS ou sur une SGBD dentralisée 
+    uint partLengt;             // longueur du tableau des participans 
+    address[] part;             // tableau des participants
   }
-  // creation du tableau des lots
-  // il a été choisi de stocker les lots dans un tableau car nous devons parcourir le tableau pour recuperer avec le frontend la liste des lots
-  LOT[] public tableauLots; 
-
+  
   struct Participation {
-    uint idLot;
-    uint Tsprice1;
-    uint price1;
-    uint Tsprice2;
-    uint price2;
+    uint idLot;                 // index du lot
+    uint Tsprice1;              // time stamp au moment ou le soumissionaire fait ça proposition
+    uint price1;                // prix pour lequel le soumissionaire reéalisera le lot 
+    bool isWinner;              // si il à ramporté le lot
+    bool isRealisation;         // si il à réalisé le  lot
   }
+
+  mapping(address => Users) mappingUsers;
+  AO[] public arrayAO;
+  LOT[] arrayLots; 
   mapping(address => Participation[]) mappingParticipation;
 
-  // A TEST ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  //option avec deux tours  :
-  // struct Participation1 {
-  //   uint idLot;
-  //   uint Tsprice;
-  //   uint price;
-  // }
-  // mapping(address => Participation1[]) mappingParticipation1;
-
-  // struct Participation2 {
-  //   uint idLot;
-  //   uint Tsprice;
-  //   uint price;
-  // }
-  // mapping(address => Participation2[]) mappingParticipation2;
-  // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-  // enum etapeAO {
-  //   definitionAO,
-  //   definitionLOT,
-  //   reponseAO,
-  //   depouillementAO,
-  //   aoClos
-  // }
-
-
-  //####################################
+  //###########
   // The events
-  //####################################
-  event transferSecu(uint codeAction, address user); // ???? je sais pas ce que tu à voulu faire !
-  //un utilisateur a été ajouté au tableau des utilisateurs
+  //###########
+
   event userAdded(address user, string name);
   event userUpdated(address user, string name);
   event requestAuditor(address user);
@@ -115,26 +87,25 @@ contract TenderOnChain is Ownable {
   event userAuditor(address user);
   event userDeleted(address user);
   event userAudited(address user, address auditor, uint time);
-  // Appel Offre
-  event AoCreated(uint indexAO , address user);
-  event AoEddited(uint indexAO , address user);
-  /**
-  * @dev Event qui est déclenché lors de la création d'un lot
-  * @param indexAO index de l'AO
-  * @param indexLOT index du lot
-  * @param user adresse de l'utilisateur qui a créé le lot
-  */
-  event LotCreated(uint indexAO , uint indexLOT , address user);
-  /**
-  * @dev Event qui se déclenche lorsque l'on reçoit de l'argent
-  * @param value : montant reçu
-  * @param user : adresse de l'utilisateur qui a envoyé l'argent
-  */
+  event AoCreated(uint indexAO , string name , address user);
+  event AoEddited(uint indexAO , string name , address user);
+  event LotCreated(uint indexAO , uint indexLOT , address user, uint NftId,string name);
   event argentRecu(uint value , address user);
+  event participation(uint indexLOT , address user, uint NftId);
+  event winnerAttribution(uint indexAO ,uint indexLOT , address winner, uint  NftId);
+  event RealisationAttribution(uint indexAO ,uint indexLOT , address winner, uint  NftId);
 
-  //####################################
+  //#########
   // Modifier
-  //####################################
+  //#########
+
+  /**
+  * @dev modifier qui verifie si l'utilisateur est bien le propriétaire du contrat
+  */
+  modifier onlyOwner() {
+    require(msg.sender == owner, "Ownable: caller is not the owner");
+    _;
+  }
 
   /**
   * @dev modifier qui verifie si l'utilisateur à bien creer son compte
@@ -152,9 +123,9 @@ contract TenderOnChain is Ownable {
     _;
   }
 
-  //####################################
+  //##############
   // The functions
-  //####################################
+  //##############
   // :::::::::::::::::::::::::::::::::::::::::::: PRICE :::::::::::::::::::::::::::::::::::::::::::: //
 
   /**
@@ -200,20 +171,33 @@ contract TenderOnChain is Ownable {
     payable (_to).transfer(address(this).balance);
   }
 
+  /**
+  * @dev Transfère le montant spécifié depuis le contrat vers l'adresse spécifiée.
+  * @param _to L'adresse vers laquelle effectuer le transfert.
+  * @param _amount Le montant à transférer.
+  */
+  function transfertBalanceSecuAmount(address _to, uint _amount) external onlyOwner {
+    require(_amount > 0, "Le montant de transfert doit etre superieur a 0");
+    require(address(this).balance >= _amount, "Le contrat n'a pas suffisamment de fonds pour effectuer le transfert");
+    payable (_to).transfer(_amount);
+  }
+
   // ::::::::::::::::::::::::::::::::::::::::::::: USER ::::::::::::::::::::::::::::::::::::::::::::: //
-  // ------------------------------------------------------
+  // ----------------------------------------
   // User functions for manipulation account: 
-  // ------------------------------------------------------
+  // ----------------------------------------
 
   /**
   * @dev Permet de creer un compte
   * @param _name Le nom de l'utilisateur
   */
   function createAccount(string memory _name) external {
+    require(msg.sender != owner, "pas owner");
     require(mappingUsers[msg.sender].isRegistred != true, "Vous etes deja inscrit");
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     mappingUsers[msg.sender].isRegistred = true;
     mappingUsers[msg.sender].name = _name;
+    userLength = userLength + 1;
     emit userAdded(msg.sender,_name);
   }
 
@@ -230,18 +214,16 @@ contract TenderOnChain is Ownable {
 
   /**
   * @dev Demande de passage au statut auditeur
-  * @param _addr L'adresse de l'utilisateur
   */
-  function requestNewAuditor(address _addr) external isRegistred {
-    emit requestAuditor(_addr);
+  function requestNewAuditor() external isRegistred {
+    emit requestAuditor(msg.sender);
   }
 
   /**
   * @dev Cette fonction permet de demander la validation d'un compte
-  * @param _addr L'adresse du compte à valider
   */
-  function requestAcountValidation(address _addr) external isRegistred {
-    emit requestValide(_addr);
+  function requestAcountValidation() external isRegistred {
+    emit requestValide(msg.sender);
   }
 
   /**
@@ -253,9 +235,9 @@ contract TenderOnChain is Ownable {
     return mappingUsers[_addr];
   }
 
-  // ------------------------------------------------------
+  // ---------------------------------------
   // Owner fuctions for user manipulations :
-  // ------------------------------------------------------
+  // ---------------------------------------
 
   /**
   * @dev Permet de récupérer les informations d'un utilisateur
@@ -287,18 +269,30 @@ contract TenderOnChain is Ownable {
     emit userDeleted(_addr);
   }
 
-  // fonction transfer addr en cas de perte 0x... d'un user 
+  /**
+  * @dev Remplace l'adresse d'un utilisateur dans le mapping sans modifier la structure.
+  * @param _oldAddress L'ancienne adresse de l'utilisateur.
+  * @param _newAddress La nouvelle adresse de l'utilisateur.
+  * @return bool True si l'adresse a été mise à jour avec succès, false sinon.
+  */
+  function updateAccount(address _oldAddress, address _newAddress) external onlyOwner returns(bool) {
+    require(mappingUsers[_oldAddress].isRegistred, "L'utilisateur specifie n'existe pas dans le mapping");
+    Users memory userData = mappingUsers[_oldAddress];
+    delete mappingUsers[_oldAddress];
+    mappingUsers[_newAddress] = userData;
+    return true;
+  }
 
-  // ------------------------------------------------------
+  // -----------------------------------------
   // Auditor fuctions for user manipulations :
-  // ------------------------------------------------------
+  // -----------------------------------------
 
   /**
   * @dev Met à jour le statut d'un utilisateur à approuvé
   * @param _addr Adresse de l'utilisateur à approuver
   */
-  function updateAcountToApproval(address _addr) external isAuditor {
-    mappingUsers[_addr].isApproval = true;
+  function updateAcountToApproval(address _addr, bool _result) external isAuditor {
+    mappingUsers[_addr].isApproval = _result;
     mappingUsers[_addr].adresseValidateur = msg.sender;
     mappingUsers[_addr].dateApprouval = block.timestamp;
     emit userAudited(_addr, msg.sender, block.timestamp);
@@ -309,19 +303,19 @@ contract TenderOnChain is Ownable {
   /**
   * @dev Permet de créer un AO
   * @param _name Nom de l'AO
-  * @param _amount Montant à envoyer
   */
-  function createAO(string memory _name, uint _amount) external isRegistred payable {
-    require(_amount >= priceAO , "Veuillez mettre le bon montant");
+  function createAO(string memory _name) external isRegistred payable {
+    require(msg.value >= priceAO , "Veuillez mettre le bon montant");
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
     AO memory ao; 
     ao.aoName = _name;
     ao.adressDDO = msg.sender;
     ao.createdAt = block.timestamp;
-    tableauAO.push(ao);
-    dev.transfer(_amount); 
-    emit AoCreated(AoLentght,msg.sender);
-    AoLentght = AoLentght + 1;
+    ao.isOpen = false;
+    arrayAO.push(ao);
+    dev.transfer(msg.value);
+    emit AoCreated(aoLength,_name,msg.sender);
+    aoLength = aoLength + 1;
   }
 
   /**
@@ -330,9 +324,9 @@ contract TenderOnChain is Ownable {
   * @param _name le nouveau nom de l'appel d'offre
   */
   function editAO(uint _index, string memory _name) external isRegistred {
-    require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
-    tableauAO[_index].aoName = _name;
-    emit AoEddited(_index,msg.sender);
+    require(arrayAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
+    arrayAO[_index].aoName = _name;
+    emit AoEddited(_index,_name,msg.sender);
   }
 
   // ::::::::::::::::::::::::::::::::::::::::::::: LOT ::::::::::::::::::::::::::::::::::::::::::::: //
@@ -341,78 +335,107 @@ contract TenderOnChain is Ownable {
   * @dev Ajoute un lot à un appel d'offre
   * @param _index index de l'appel d'offre
   * @param _desc description du lot
-  * @param _numeroAO numero de l'appel d'offre
   * @param _ts timestamp de cloture du lot
   * @param _cat categorie du lot
+  * @param _suscat  sous categorie du lot
   * @param _min prix minimum du lot
   * @param _max prix maximum du lot
-  * @param _uri uri du pdf du lot
+  * @param _uriJson uri du json du lot
+  * @param _uriLinkFile uri du pdf du lot
   */
-  function addLOT(
+  function createLot(
     uint _index, 
     string memory _desc, 
-    uint _numeroAO, 
     uint _ts,
     string memory _cat,
+    string memory _suscat,
     uint _min,
     uint _max,
-    string memory _uri
+    string memory _uriJson,
+    string memory _uriLinkFile
     ) external isRegistred  {
-    require(_numeroAO >= 0 , "Veuillez indiquer un numero AO convenable"); // pas sur que cela soit necessaire 
+    require(_ts > block.timestamp, "La date de cloture doit etre superieure a la date actuelle");
+    require(_min > 0, "Le prix minimum doit etre superieur a 0");
+    require(_max > 0, "Le prix maximum doit etre superieur a 0");
     require(_min < _max , "le prix minimum ne peut pas etre superieur au prix maximum");
-    require(tableauAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
-    require(tableauAO[_index].lotDeLAO.length < maxLot , "Vous avez atteint la limite du nombre de lots");
+    require(arrayAO[_index].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
+    require(arrayAO[_index].lotDeLAO.length < maxLot , "Vous avez atteint la limite du nombre de lots");
     LOT memory lot;
     lot.adressDDO = msg.sender;
-    lot.idAO = _numeroAO;
+    lot.idAO = _index;
     lot.description = _desc;
     lot.TsCloture = _ts;
     lot.categorie = _cat;
+    lot.susCategorie = _suscat;
     lot.minprice = _min;
     lot.maxprice = _max;
-    lot.URIPDF = _uri;
-    tableauLots.push(lot);
-    // uint indexNouveauLot = tableauLots.length - 1;
-    tableauAO[_index].lotDeLAO.push(LotLentght);
-    emit LotCreated(_numeroAO, LotLentght, msg.sender);
-    LotLentght = LotLentght + 1;
+    lot.URIPDF = _uriLinkFile;
+    arrayLots.push(lot);
+    arrayAO[_index].lastLotId = arrayAO[_index].lastLotId + 1;
+    arrayAO[_index].lotDeLAO.push(lotLength);
+    _mint(address(this), NftId);
+    _setTokenURI(NftId, _uriJson);
+    emit LotCreated(_index, lotLength, msg.sender, NftId,_desc);
+    NftId = NftId + 1;
+    lotLength = lotLength + 1;
   }
 
-  // à quoi cela sert ??? 
-  // function getAO(uint _index) public view returns (string memory _nom, address _addrDDO, bool _isPaid ) {
-  //   return (tableauAO[_index].aoName , tableauAO[_index].adressDDO , tableauAO[_index].isPaid);
-  // }
-
+  function getArrayLots(uint _index) external isRegistred view returns (LOT memory) {
+    if (arrayLots[_index].TsCloture > block.timestamp) {
+        address[] memory part = new address[](0);
+      return (LOT)(
+        arrayLots[_index].adressDDO, 
+        arrayLots[_index].idAO, 
+        arrayLots[_index].description, 
+        arrayLots[_index].TsCloture, 
+        arrayLots[_index].winner, 
+        arrayLots[_index].isNftAttributionEmit, 
+        arrayLots[_index].isNftRealisationEmit, 
+        arrayLots[_index].TsAtt,
+        arrayLots[_index].categorie, 
+        arrayLots[_index].susCategorie, 
+        arrayLots[_index].URIPDF,
+        arrayLots[_index].minprice, 
+        arrayLots[_index].maxprice, 
+        arrayLots[_index].partLengt,
+        part
+      );
+    } else {
+      return arrayLots[_index];
+    }
+  }
 
 // ::::::::::::::::::::::::::::::::::::::::::::: PARTICIPATION ::::::::::::::::::::::::::::::::::::::::::::: //
-
-  // a revoir .... 
-  function createParticipation(uint _idlot, uint _price) external {
-    require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
-    mappingParticipation[msg.sender].push(Participation(_idlot,block.timestamp,_price,block.timestamp + 10,10));
+  /**
+  * @dev Cette fonction permet à un utilisateur enregistré de créer une participation 
+  *      à un lot en fournissant l'ID du lot, le montant de l'offre et l'URI de 
+  *      l'objet non-fongible (NFT) qui sera créé pour l'offre.
+  * @param _idlot L'ID du lot dans lequel l'utilisateur souhaite participer.
+  * @param _price Le montant de l'offre de l'utilisateur.
+  * @param _uri L'URI de l'objet non-fongible (NFT) qui sera créé pour l'offre de l'utilisateur.
+  */
+  function createParticipation(uint256 _idlot, uint256 _price, string memory _uri) external isRegistred payable {
+    require(msg.value >= priceLot , "Veuillez mettre le bon montant");
+    require(arrayLots[_idlot].TsCloture > block.timestamp, "l'appel d'offre est termine");
+    dev.transfer(msg.value);
+    mappingParticipation[msg.sender].push(Participation(_idlot, block.timestamp, _price,false ,false));
+    arrayLots[_idlot].part.push(msg.sender);
+    arrayLots[_idlot].partLengt = arrayLots[_idlot].partLengt + 1;
+    mappingUsers[msg.sender].countParticipation = mappingUsers[msg.sender].countParticipation + 1;
+    _mint(address(this), NftId);
+    _setTokenURI(NftId, _uri);
+    NftId = NftId + 1;
+    emit participation(_idlot , msg.sender, NftId);
   }
-  //-------------------------------------------
-  //option avec deux tours  :   
-  // /**
-  // * @notice Cree une participation pour un lot
-  // * @param _idlot l'id du lot
-  // * @param _price le prix de la participation
-  // */
-  // function createParticipation1(uint _idlot, uint _price) external {
-  //   require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
-  //   mappingParticipation1[msg.sender].push(Participation1(_idlot,block.timestamp,_price));
-  // }
-
-  // /**
-  // * @notice Cree une participation pour un lot
-  // * @param _idlot l'id du lot
-  // * @param _price le prix de la participation
-  // */
-  // function createParticipation2(uint _idlot, uint _price) external {
-  //   require(tableauLots[_idlot].TsCloture > block.timestamp ,"l'appel d'offre est termine");
-  //   mappingParticipation2[msg.sender].push(Participation2(_idlot,block.timestamp,_price));
-  // }
-  //-------------------------------------------
+  
+  /**
+  * @dev Permet de récupérer une participation
+  * @param _index l'index de la participation
+  * @return la participation
+  */
+  function getMyParticipation(uint _index) external isRegistred view returns (Participation memory) {
+    return mappingParticipation[msg.sender][_index];
+  }
 
   /**
   * @dev Permet de récupérer une participation
@@ -420,7 +443,7 @@ contract TenderOnChain is Ownable {
   * @param _index l'index de la participation
   * @return la participation
   */
-  function getParticipation(address _addr,uint _index) external view returns (Participation memory) {
+  function getParticipationOwner(address _addr,uint _index) external onlyOwner view returns (Participation memory) {
     return mappingParticipation[_addr][_index];
   }
 
@@ -429,7 +452,7 @@ contract TenderOnChain is Ownable {
   * @param _addr L'adresse de l'utilisateur
   * @return La longueur de la participation de l'utilisateur
   */
-  function getParticipationLength(address _addr) external view returns (uint) {
+  function getParticipationLength(address _addr) external isRegistred view returns (uint) {
     return mappingParticipation[_addr].length;
   }
 
@@ -438,29 +461,42 @@ contract TenderOnChain is Ownable {
   * @param _addr Adresse de l'utilisateur
   * @param _index Index de la participation
   */
-  function removeParticipation(address _addr, uint _index) external {
+  function removeParticipation(address _addr, uint _index) external onlyOwner {
     delete mappingParticipation[_addr][_index];
   }
 
-
-// :::::::::::::::::::::::::::::::::::::::::::::::::: NFT :::::::::::::::::::::::::::::::::::::::::::::::::: //
-
-// require pour que le createur de AO ne puisse pas participer a son AO
-// le soum a bien payer
-  // function createNftForLot() {
-    
-  // }
-
-  // function createNftForParticipation(address _participant) external isRegistred {
-
-  // }
-
-  // function createNftForWinner(address _participant) external isRegistred {
-
-  // }
-
-  // function createNftForWinnerAndAchivment(address _participant) external isRegistred {
-
-  // }
-
+  /**
+  * @dev declare une participation winner ou bonne realisation
+  * @param _niveau niveau de 1 à 2 (1= winner, 2 = bonne realisation)
+  * @param _indexAo, index de l'AO sur lequel porte la participation
+  * @param _indexLot, index du Lot sur lequel porte la participation
+  * @param _index Index de la participation
+  * @param _addr Adresse du gagant 
+  * @param _uriJson Index de la participation
+  */
+  function attribution(uint8 _niveau, uint256 _indexAo, uint256 _indexLot, uint256 _index, address _addr, string memory _uriJson) external isRegistred {
+    require(arrayLots[_indexAo].TsCloture < block.timestamp, "l'appel d'offre n'est pas termine");
+    require(arrayAO[_indexAo].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
+    require(_niveau > 0, "Le niveau doit etre superieur a zero");
+    require(_niveau <= 3, "Le niveau doit etre inferieur a 3");
+    if (_niveau == 1) {
+      mappingParticipation[_addr][_index].isWinner = true;
+      arrayLots[_indexLot].isNftAttributionEmit = true;
+      arrayLots[_indexLot].TsAtt = block.timestamp;
+      mappingUsers[_addr].countNFTWinner = mappingUsers[_addr].countNFTWinner +1;
+      arrayLots[_indexLot].winner= _addr;
+      _mint(address(this), NftId);
+      _setTokenURI(NftId, _uriJson);
+      emit winnerAttribution(_indexAo, _index, _addr, NftId);
+        NftId = NftId + 1;
+    } else if ((_niveau == 2) && (mappingParticipation[_addr][_index].isWinner = true)) {
+      mappingParticipation[_addr][_index].isRealisation = true;
+      arrayLots[_indexLot].isNftRealisationEmit = true;
+      mappingUsers[_addr].countNFTReal = mappingUsers[_addr].countNFTReal + 1;
+      _mint(address(this), NftId);
+      _setTokenURI(NftId, _uriJson);
+      emit RealisationAttribution(_indexAo, _index, _addr, NftId);
+      NftId = NftId + 1;
+    }
+  }
 }

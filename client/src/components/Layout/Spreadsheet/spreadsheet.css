@@ -1,0 +1,33 @@
+#array {
+    width: 100%;
+    height: inherit;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 5% 95%;
+}
+#top-array {
+    width: max-content;
+    height: max-content;
+}
+#bottom-array {
+    width: inherit;
+    height: auto;
+}
+#title-data-array {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px black solid;
+}
+.column {
+    font-size: medium;
+}
+#data-array {
+    width: inherit;
+    height: inherit;
+}
+.data {
+    display: flex;
+    justify-content: space-around;
+}

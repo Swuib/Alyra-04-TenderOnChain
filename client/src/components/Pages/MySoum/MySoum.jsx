@@ -7,12 +7,12 @@ const MySoum = () => {
         <>
             <Header/>
             <main>
-                <section>
+                <section className="section-nav">
                     <NavInfo />
                 </section>
                 <section>
                     <div className="main-container">
-                        OWNER
+                        my soum
                     </div>
                 </section>
             </main>

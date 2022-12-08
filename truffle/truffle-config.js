@@ -25,11 +25,11 @@ module.exports = {
     * @instrucs for deploy on testnet create .env in truffle folder and create MNEMONIC=<your mnemonic>
     * ---------------------------------------------------------------------------------
     */
-
+   
     /**
     * @dev Avalanche fuji testnet
     * @command migration : truffle migrate --network fuji
-    * @faucet https://faucet.avax.network/  
+    * @faucet https://faucet.avax.network/
     * @explorer https://testnet.snowtrace.io/
     */
     fuji: {

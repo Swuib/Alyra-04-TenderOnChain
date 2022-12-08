@@ -1,0 +1,44 @@
+#main-container-details-mysoum {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 70% 30%;
+}
+#top-left-details-mysoum-container {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+    border-bottom: 1px solid black;
+}
+#top-rigth-details-mysoum-container {
+    background-color: rgb(255, 138, 127);
+}
+#bottom-left-details-mysoum-container {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+}
+#title-top-container-left {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(12, 1fr);
+}
+#title-top-container-rigth {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(12, 1fr);
+}
+#bottom-rigth-details-mysoum-container {
+    background-color: rgb(242, 255, 127);
+}
+.title-ref {
+    font-size: large;
+}
+.title-ref-data {
+    font-size: large;
+}

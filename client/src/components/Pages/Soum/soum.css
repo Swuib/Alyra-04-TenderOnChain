@@ -1,0 +1,83 @@
+.main-container-soum {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 5% 95%;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+#array-soum {
+    width: 100%;
+    height: inherit;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 85%;
+}
+#top-array-soum {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 1fr;
+}
+#title-data-array-soum {
+    width: inherit;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    text-align: center;
+    border-bottom: 1px black solid;
+}
+.data-soum {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    font-size: medium;
+    text-align: center;
+    height: 30px;
+    padding-top: 10px;
+}
+
+input[type="date"]{
+    background-color:#2dabf9;;
+    padding: 5px;
+    position: initial;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+::-webkit-calendar-picker-indicator{
+    background-color: #ffffff;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+select {
+    background-color:#2dabf9;;
+    padding: 5px;
+    position: initial;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+input[type="text"]{
+    background-color:#2dabf9;;
+    padding: 5px;
+    position: initial;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+input[type="text"]::placeholder {
+    color: #ffffff;
+  }

@@ -7,12 +7,15 @@ main {
     padding: 0 10vw; */
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 8vh 82vh;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 }
 section {
     padding: 0 2%;
+}
+.section-nav {
+    height: 100%;
 }
 .main-container {
     height: 100%;
