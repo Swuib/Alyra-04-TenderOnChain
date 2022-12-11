@@ -48,3 +48,8 @@
 #data-form-ao p {
     font-size: 1vw;
 }
+#bottom-form-ao{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}

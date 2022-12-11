@@ -1,16 +1,20 @@
 import { Navigate } from 'react-router-dom';
 import { useEth } from '../../contexts/EthContext';
-import { containsKeyInv } from '../Utils/Utils';
+import { containsInv } from '../Utils/Utils';
 
 const UserRegisteredRouteSoum =  ({ children }) => {
-  const { state: { accounts,owner, userErr, userInfo, myArrayLot, networkID, networkIDValid} } = useEth();
+  const { state: { accounts,owner, userErr, userInfo, myArrayLotId, networkID, networkIDValid} } = useEth();
   let pathslice, pathslice2;
   if (userInfo !== null) {
     if (userInfo.name !== null) {
       const pathname = window.location.pathname.match(userInfo.name);
       if (pathname !== null) {
-      pathslice = pathname.input.slice( pathname.index, pathname.index + userInfo.name.length); // user name
-      pathslice2 = Number(pathname.input.slice(window.location.pathname.length - 1));
+        pathslice = pathname.input.slice( pathname.index, pathname.index + userInfo.name.length);
+        const numberPattern = /\d+/;
+        const numberMatch = pathname.input.match(numberPattern);
+        if (numberMatch !== null) {
+          pathslice2 = Number(numberMatch[0]);
+        };
       };
     };
   };
@@ -21,7 +25,7 @@ const UserRegisteredRouteSoum =  ({ children }) => {
     && userInfo !== null
     && userInfo.name !== null
     && userInfo.name === pathslice
-    && containsKeyInv(myArrayLot,'index', pathslice2)
+    && containsInv(myArrayLotId, pathslice2)
     && accounts !== owner 
     && networkID === networkIDValid
     ) ? children : <Navigate to="/" />;

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -8,15 +8,13 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721UR
 /// @notice This contract ...
 contract TenderOnChain is ERC721URIStorage {
 
-  constructor() ERC721("TENDERONCHAIN", "TOC") {}
-
   address public owner = msg.sender;                                                // adresse du proprietaire du contract
-  address payable public dev = payable(0x1Adb4BbA0470F24B008863E5799daa7369F62C1b); // adrress du developpeur 1
+  address payable public dev = payable(0x9B35Fa8639bB06712600840184c3707f0eBbF012); // adrress du developpeur 1
 
   uint8 private maxLot = 30;                      // defini le nombre de lot max que peut contenir un lot
   uint private NftId;                             // defini l'id du nft
-  uint public priceAO = 1 ether;                  // defini le montant à virer pour la creation de l'AO
-  uint public priceLot = 100000000000000000 wei;  // defini le montant à virer pour la participation à un lot
+  uint public priceAO = 100 wei;//1 ether;                  // defini le montant à virer pour la creation de l'AO
+  uint public priceLot = 50 wei; //100000000000000000 wei;  // defini le montant à virer pour la participation à un lot
   uint public aoLength;                           // defini le nombre total AO
   uint public lotLength;                          // defini le nombre total de lot
   uint public userLength;                         // defini le nombre total d'utilisateur
@@ -25,15 +23,17 @@ contract TenderOnChain is ERC721URIStorage {
   /// @notice  structure des utilisateurs
   /// @dev  structure des utilisateurs
   struct Users {
-    string name;                //raison sociale de la societé 
     bool isRegistred;           // vrai si l'utilisateur est enregistré
+    bool reqIsAuditor;          // verifie que l'tulisateur à emi la requete 
     bool isAuditor;             // vrai si l'utilisateur est un validateur d'autentification de societés
+    bool reqIsApproval;         // verifie que l'tulisateur à emi la requete 
     bool isApproval;            // est vrai si l'auditeur a fait le contrôle de cette société
-    address adresseValidateur;  // adresse du controleur qui a verifié la situation du DDO
     uint dateApprouval;         // timestamp de la validation ou devalidation du DDO
     uint countNFTWinner;        // count du nombre de lot gagné
     uint countNFTReal;          // count du nombre de lot réalisé
     uint countParticipation;    // count du nombre des participations
+    address adresseValidateur;  // adresse du controleur qui a verifié la situation du DDO
+    string name;                // nom de la societé 
   }
   
   struct AO {
@@ -46,21 +46,20 @@ contract TenderOnChain is ERC721URIStorage {
   }
   
   struct LOT {
-    address adressDDO ;         // adresse du DDO qui va creer le lot
-    uint idAO;                  // index de AO
-    string description;         // description ou titre du lot 
-    uint TsCloture;             // timeStamp Cloture du lot
-    address winner;             // adress de l'attributaire du lot
     bool isNftAttributionEmit;  // si le nft d'attribution à été émit
     bool isNftRealisationEmit;  // si le nft de réalisation à été émit
+    uint idAO;                  // index de AO
+    uint TsCloture;             // timeStamp Cloture du lot
     uint TsAtt;                 // timeStamp d'attribution du lot
-    string categorie;           // categorie du lot
-    string susCategorie;        // sous categorie du lot
-    string URIPDF;              // URL du PDF du IPFS ou sur une SGBD dentralisée 
     uint minprice;              // prix min du lot 
     uint maxprice;              // prix max du lot 
     uint partLengt;             // longueur du tableau des participans 
-    address[] part;             // tableau des participants
+    address winner;             // adress de l'attributaire du lot
+    address adressDDO ;         // adresse du DDO qui va creer le lot
+    string description;         // description ou titre du lot 
+    string categorie;           // categorie du lot
+    string susCategorie;        // sous categorie du lot
+    string URIPDF;              // URL du PDF du IPFS ou sur une SGBD dentralisée 
   }
   
   struct Participation {
@@ -71,10 +70,12 @@ contract TenderOnChain is ERC721URIStorage {
     bool isRealisation;         // si il à réalisé le  lot
   }
 
-  mapping(address => Users) mappingUsers;
   AO[] public arrayAO;
   LOT[] arrayLots; 
+  mapping(address => Users) mappingUsers;
   mapping(address => Participation[]) mappingParticipation;
+
+  constructor() ERC721("TENDERONCHAIN", "TOC") {}
 
   //###########
   // The events
@@ -216,6 +217,7 @@ contract TenderOnChain is ERC721URIStorage {
   * @dev Demande de passage au statut auditeur
   */
   function requestNewAuditor() external isRegistred {
+    mappingUsers[msg.sender].reqIsAuditor = true;
     emit requestAuditor(msg.sender);
   }
 
@@ -223,6 +225,7 @@ contract TenderOnChain is ERC721URIStorage {
   * @dev Cette fonction permet de demander la validation d'un compte
   */
   function requestAcountValidation() external isRegistred {
+    mappingUsers[msg.sender].reqIsApproval = true;
     emit requestValide(msg.sender);
   }
 
@@ -254,6 +257,7 @@ contract TenderOnChain is ERC721URIStorage {
   * @return L'utilisateur ajouté
   */
   function updateAcountToAuditor(address _addr) external onlyOwner returns (Users memory) {
+    mappingUsers[_addr].reqIsAuditor = false;
     mappingUsers[_addr].isAuditor = true;
     emit userAuditor(_addr);
     return mappingUsers[_addr];
@@ -292,6 +296,7 @@ contract TenderOnChain is ERC721URIStorage {
   * @param _addr Adresse de l'utilisateur à approuver
   */
   function updateAcountToApproval(address _addr, bool _result) external isAuditor {
+    mappingUsers[_addr].reqIsApproval = false;
     mappingUsers[_addr].isApproval = _result;
     mappingUsers[_addr].adresseValidateur = msg.sender;
     mappingUsers[_addr].dateApprouval = block.timestamp;
@@ -380,29 +385,14 @@ contract TenderOnChain is ERC721URIStorage {
     lotLength = lotLength + 1;
   }
 
+  /**
+  * @dev Retrieves a lot from the `arrayLots` array at a specified index.
+  * @param _index The index of the lot to retrieve.
+  * @return The lot at the specified index, with some fields reset if the
+  *     `TsCloture` field is less than the current block's timestamp.
+  */
   function getArrayLots(uint _index) external isRegistred view returns (LOT memory) {
-    if (arrayLots[_index].TsCloture > block.timestamp) {
-        address[] memory part = new address[](0);
-      return (LOT)(
-        arrayLots[_index].adressDDO, 
-        arrayLots[_index].idAO, 
-        arrayLots[_index].description, 
-        arrayLots[_index].TsCloture, 
-        arrayLots[_index].winner, 
-        arrayLots[_index].isNftAttributionEmit, 
-        arrayLots[_index].isNftRealisationEmit, 
-        arrayLots[_index].TsAtt,
-        arrayLots[_index].categorie, 
-        arrayLots[_index].susCategorie, 
-        arrayLots[_index].URIPDF,
-        arrayLots[_index].minprice, 
-        arrayLots[_index].maxprice, 
-        arrayLots[_index].partLengt,
-        part
-      );
-    } else {
-      return arrayLots[_index];
-    }
+    return arrayLots[_index];
   }
 
 // ::::::::::::::::::::::::::::::::::::::::::::: PARTICIPATION ::::::::::::::::::::::::::::::::::::::::::::: //
@@ -414,12 +404,11 @@ contract TenderOnChain is ERC721URIStorage {
   * @param _price Le montant de l'offre de l'utilisateur.
   * @param _uri L'URI de l'objet non-fongible (NFT) qui sera créé pour l'offre de l'utilisateur.
   */
-  function createParticipation(uint256 _idlot, uint256 _price, string memory _uri) external isRegistred payable {
+  function createParticipation(uint _idlot, uint _price, string memory _uri) external isRegistred payable {
     require(msg.value >= priceLot , "Veuillez mettre le bon montant");
     require(arrayLots[_idlot].TsCloture > block.timestamp, "l'appel d'offre est termine");
     dev.transfer(msg.value);
     mappingParticipation[msg.sender].push(Participation(_idlot, block.timestamp, _price,false ,false));
-    arrayLots[_idlot].part.push(msg.sender);
     arrayLots[_idlot].partLengt = arrayLots[_idlot].partLengt + 1;
     mappingUsers[msg.sender].countParticipation = mappingUsers[msg.sender].countParticipation + 1;
     _mint(address(this), NftId);
@@ -429,7 +418,7 @@ contract TenderOnChain is ERC721URIStorage {
   }
   
   /**
-  * @dev Permet de récupérer une participation
+  * @dev Permet de récupérer une participation pour un utilisateur 
   * @param _index l'index de la participation
   * @return la participation
   */
@@ -438,7 +427,18 @@ contract TenderOnChain is ERC721URIStorage {
   }
 
   /**
-  * @dev Permet de récupérer une participation
+  * @dev Permet de récupérer une participation pour n'importe quel utilisateur 
+  * @param _addr l'adresse de l'utilisateur
+  * @param _index l'index de la participation
+  * @return la participation
+  */
+  function getParticipation(address _addr,uint _index, uint _indexAo) external isRegistred view returns (Participation memory) {
+    require(arrayLots[_indexAo].TsCloture < block.timestamp, "l'appel d'offre n'est pas termine");
+    return mappingParticipation[_addr][_index];
+  }
+
+  /**
+  * @dev Permet de récupérer une participation pour le owner
   * @param _addr l'adresse de l'utilisateur
   * @param _index l'index de la participation
   * @return la participation
@@ -470,29 +470,31 @@ contract TenderOnChain is ERC721URIStorage {
   * @param _niveau niveau de 1 à 2 (1= winner, 2 = bonne realisation)
   * @param _indexAo, index de l'AO sur lequel porte la participation
   * @param _indexLot, index du Lot sur lequel porte la participation
-  * @param _index Index de la participation
+  * @param _index Index du mapping du participant
   * @param _addr Adresse du gagant 
-  * @param _uriJson Index de la participation
+  * @param _uriJson json  pour le nft
   */
-  function attribution(uint8 _niveau, uint256 _indexAo, uint256 _indexLot, uint256 _index, address _addr, string memory _uriJson) external isRegistred {
-    require(arrayLots[_indexAo].TsCloture < block.timestamp, "l'appel d'offre n'est pas termine");
+  function attribution(uint _niveau, uint _indexAo, uint _indexLot, uint _index, address _addr, string memory _uriJson) external isRegistred {
     require(arrayAO[_indexAo].adressDDO == msg.sender,"vous etes pas le DDO de cet Appel d offre");
     require(_niveau > 0, "Le niveau doit etre superieur a zero");
-    require(_niveau <= 3, "Le niveau doit etre inferieur a 3");
+    require(_niveau < 3, "Le niveau doit etre inferieur a 3");
+    require(arrayLots[_indexAo].TsCloture < block.timestamp, "l'appel d'offre n'est pas termine");
     if (_niveau == 1) {
+      require(arrayLots[_indexAo].isNftAttributionEmit == false, "le gagant est deja attirbuer");
       mappingParticipation[_addr][_index].isWinner = true;
       arrayLots[_indexLot].isNftAttributionEmit = true;
       arrayLots[_indexLot].TsAtt = block.timestamp;
-      mappingUsers[_addr].countNFTWinner = mappingUsers[_addr].countNFTWinner +1;
-      arrayLots[_indexLot].winner= _addr;
+      mappingUsers[_addr].countNFTWinner += 1;
+      arrayLots[_indexLot].winner = _addr;
       _mint(address(this), NftId);
       _setTokenURI(NftId, _uriJson);
       emit winnerAttribution(_indexAo, _index, _addr, NftId);
-        NftId = NftId + 1;
+      NftId = NftId + 1;
     } else if ((_niveau == 2) && (mappingParticipation[_addr][_index].isWinner = true)) {
+      require(arrayLots[_indexAo].isNftRealisationEmit == false, "la realisation est deja faite");
       mappingParticipation[_addr][_index].isRealisation = true;
       arrayLots[_indexLot].isNftRealisationEmit = true;
-      mappingUsers[_addr].countNFTReal = mappingUsers[_addr].countNFTReal + 1;
+      mappingUsers[_addr].countNFTReal += 1;
       _mint(address(this), NftId);
       _setTokenURI(NftId, _uriJson);
       emit RealisationAttribution(_indexAo, _index, _addr, NftId);

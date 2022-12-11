@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
-import { options, convertDateToUnixTimestamp, getCurrentTimestamp, getDateInISOFormat } from '../../Utils/Utils'
+import { options, getCurrentTimestamp, getDateInISOFormat } from '../../Utils/Utils'
 import { useEth } from '../../../contexts/EthContext';
 import Header from '../../Layout/Header/Header';
 import NavInfo from '../../Layout/NavInfo/NavInfo';
@@ -11,12 +11,13 @@ import Loader from '../../Layout/Loader/Loader';
 import { Link } from 'react-router-dom';
 
 const CreateLot = () => {
-    const { state: { owner,artifact, contract, accounts , userInfo }, init } = useEth();
+    const { state: { owner, artifact, contract, accounts , userInfo }, init } = useEth();
     const location = useLocation();
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [descriptionFormLot, setDescriptionFormLot] = useState("");
-    const [dateFormLot, setDateFormLot] = useState(0);
+    const [dateFormLot, setDateFormLot] = useState("");
+    const [timeFormLot, setTimeFormLot] = useState("");
     const [caterogireFormLot, setCaterogireFormLot] = useState("");
     const [susCategoryFormLot, setSelectedSusCategoryFormLot] = useState("");
     const [priceMinFormLot, setPriceMinFormLot] = useState(0);
@@ -25,7 +26,6 @@ const CreateLot = () => {
     const [loading, setLoading] = useState(false);
     const [recorded, setRecorded] = useState(false);
     const [locationState,] = useState(location.state);
-
 
     const filterOptions = (category) => {
         return options.find(opt => opt.category === category).items;
@@ -36,10 +36,13 @@ const CreateLot = () => {
     };
 
     const handleDate = e => {
-        const unixTimestamp = convertDateToUnixTimestamp(e.target.value);
-        setDateFormLot(unixTimestamp);
+        setDateFormLot(e.target.value);
     };
 
+    const handleTime = e => {
+        setTimeFormLot(e.target.value);
+    };
+    
     const handleCategorie = e => {
         setCaterogireFormLot(e.target.value);
         setSelectedCategory(e.target.value);
@@ -74,7 +77,15 @@ const CreateLot = () => {
     const handleCreateLot = async e => {
         e.preventDefault();
         setLoading(true);
-        if (selectedFile.type !== "application/pdf" || descriptionFormLot === "" || dateFormLot <=  getCurrentTimestamp() || caterogireFormLot === "" ||
+        const dateTimeString = `${dateFormLot}T${timeFormLot}`;
+        const dateObjectb = new Date(dateTimeString);
+        let ts = dateObjectb.getTime();
+        ts /= 1000;
+        // <========== look for testnet ==================
+        // ts += 3600;
+        // ts -= 3600;
+        var tsRounded = Math.round(ts);
+        if (selectedFile.type !== "application/pdf" || descriptionFormLot === "" || tsRounded <=  getCurrentTimestamp() || caterogireFormLot === "" ||
         susCategoryFormLot === "" || priceMinFormLot === 0 || priceMaxFormLot === 0 || priceMinFormLot > priceMaxFormLot) {
             toast(`Les champs du formulaire ne sont pas correct !`,
             {style: { height:'50px', minWidth:'500px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
@@ -95,7 +106,6 @@ const CreateLot = () => {
                 Authorization: `${process.env.REACT_APP_PINATA_JWT}`
             }
         }).catch( err => {
-            console.log('error upload file');
             console.log(err);
         }).then(async res => {
             cidfile = res.data.IpfsHash;
@@ -141,7 +151,6 @@ const CreateLot = () => {
                 data: data
             };
             await axios(config).catch(async err => {
-                console.log('error upload json');
                 console.log(err);
                 const config = {
                     method: 'delete',
@@ -156,7 +165,7 @@ const CreateLot = () => {
                 await contract.methods.createLot(
                     locationState.value.index.toString(),
                     descriptionFormLot,
-                    dateFormLot,
+                    tsRounded,
                     caterogireFormLot,
                     susCategoryFormLot,
                     priceMinFormLot,
@@ -170,7 +179,8 @@ const CreateLot = () => {
                     {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     setSelectedFile(null);
                     setDescriptionFormLot("");
-                    setDateFormLot(0);
+                    setDateFormLot("");
+                    setTimeFormLot("");
                     setCaterogireFormLot("");
                     setSelectedSusCategoryFormLot("");
                     setPriceMinFormLot(0);
@@ -199,7 +209,6 @@ const CreateLot = () => {
                         {style: { height:'50px', minWidth:'500px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     else {
                         const errorObject = JSON.parse(error.message.replace("[ethjs-query] while formatting outputs from RPC '", "").slice(0, -1));
-                        console.log(errorObject);
                         toast(errorObject.value.data.message.replace("VM Exception while processing transaction:",""),
                         {style: { height:'50px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     }
@@ -218,53 +227,58 @@ const CreateLot = () => {
                     <NavInfo context={locationState}/>
                 </section>
                 <section>
-                    <div className="main-container-Lot">
-                        <div className="top-fom-Lot">
-                            <div className="ref-lot-title">
+                    <div id="main-container-Lot">
+                        <div id="top-fom-Lot">
+                            <div id="ref-lot-title">
                                 <p className='title-ref'>Mon adresse Wallet</p>
                                 <p className='title-ref'>Entreprise Donneur d’ordres</p>
                                 <p className='title-ref'>Nom de l’Appel d’Offres</p>
                             </div>
-                            <div className="data-lot-title">
+                            <div id="data-lot-title">
                                 <p className='title-ref-data'>{locationState.value.adressDDO}</p>
                                 <p className='title-ref-data'>{userInfo.name}</p>
                                 <p className='title-ref-data'>{locationState.value.aoName}</p>
                             </div>
                         </div>
-                        <div className="bottom-fom-Lot">
+                        <div id="bottom-fom-Lot">
                             <form onSubmit={handleCreateLot} id='form-create-lot'>
-                                <div className="form-title-container">
-                                    <p className='title-ref-form'>Désignation du Lot:</p>
-                                    <p className='title-ref-form'>Catégorie du Lot</p>
-                                    <p className='title-ref-form'>Sous-catérogie du Lot</p>
-                                    <p className='title-ref-form'>Valorisation du Lot</p>
-                                    <p className='title-ref-form'>Date de clôture du Lot</p>
-                                    <p className='title-ref-form'>Téléchargement DCE-Lot</p>
-                                </div>
-                                <div className="form-title-container-input">
-                                    <input type="text" id="designation" name="designation"required onChange={handleDescription}/>
-                                    <select value={selectedCategory} required onChange={handleCategorie}>
-                                        <option value={""}>---</option>
-                                        {options.map(opt => <option key={opt.category} value={opt.category}>{opt.category}</option>)}
-                                    </select>
-                                    <select value={susCategoryFormLot} required onChange={handleSusCategorie}>
-                                        <option value={""}>---</option>
-                                        {selectedCategory && filterOptions(selectedCategory).map(item => <option key={item} value={item}>{item}</option>)}
-                                    </select>
-                                    <div className="min-value">
-                                        <p>Min.</p>
-                                        <input type="number" id="min" name="min" required onChange={handlePriceMin}/>
-                                        <p>€</p>
+                                <div id="top-title-container-form">
+                                    <div id="form-title-container">
+                                        <p className='title-ref-form'>Désignation du Lot:</p>
+                                        <p className='title-ref-form'>Catégorie du Lot</p>
+                                        <p className='title-ref-form'>Sous-catérogie du Lot</p>
+                                        <p className='title-ref-form'>Valorisation du Lot</p>
+                                        <p className='title-ref-form'>Date de clôture du Lot</p>
+                                        <p className='title-ref-form'>Téléchargement DCE-Lot</p>
                                     </div>
-                                    <div className="max-value">
-                                        <p>Max.</p>
-                                        <input type="number" id="max" name="max" required onChange={handlePriceMax}/>
-                                        <p>€</p>
+                                    <div id="form-title-container-input">
+                                        <input type="text" id="designation" name="designation"required onChange={handleDescription}/>
+                                        <select value={selectedCategory} required onChange={handleCategorie}>
+                                            <option value={""}>---</option>
+                                            {options.map(opt => <option key={opt.category} value={opt.category}>{opt.category}</option>)}
+                                        </select>
+                                        <select value={susCategoryFormLot} required onChange={handleSusCategorie}>
+                                            <option value={""}>---</option>
+                                            {selectedCategory && filterOptions(selectedCategory).map(item => <option key={item} value={item}>{item}</option>)}
+                                        </select>
+                                        <div id="pricelot">
+                                            <div id="min-value">
+                                                <p>Min.</p>
+                                                <input type="number" id="min" name="min" required onChange={handlePriceMin}/>
+                                                <p>€</p>
+                                            </div>
+                                            <div id="max-value">
+                                                <p>Max.</p>
+                                                <input type="number" id="max" name="max" required onChange={handlePriceMax}/>
+                                                <p>€</p>
+                                            </div>
+                                        </div>
+                                        <input type="date" id="date-cloture" name="date-cloture" required min={getDateInISOFormat()} onChange={handleDate}/>
+                                        <input type="time" id="date-cloture-time" name="date-cloture" required  onChange={handleTime}/>
+                                        <input type="file" id="dce-lot" name="dce-lot"required onChange={changeHandler}/>
                                     </div>
-                                    <input type="date" id="date-cloture" name="date-cloture" required min={getDateInISOFormat()} onChange={handleDate}/>
-                                    <input type="file" id="dce-lot" name="dce-lot"required onChange={changeHandler}/>
                                 </div>
-                                <div className="bottom-form-Lot-submit">
+                                <div id="bottom-form-Lot-submit">
                                     {!recorded ? (
                                         <>
                                             {loading ? (
@@ -284,6 +298,12 @@ const CreateLot = () => {
                                             <p>{tx}</p>
                                         </>
                                     )}
+                                    <Link 
+                                        to={`/Account/${userInfo.name}/${locationState.value.index}`} 
+                                        state={{value:locationState.value,userInfo:locationState.userInfo, Ao:locationState.value}}
+                                    >
+                                        <button className="myButton-return" >Voir lots de l'Appels d'offres</button>
+                                    </Link>
                                 </div>
                             </form>
                         </div>

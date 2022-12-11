@@ -22,4 +22,62 @@ a {
   width: 100vw;
   height: 100vh;
 }
-
+input[type="number"] {
+  appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+.myButton {
+	background-color:#2dabf9;
+	border-radius:5px;
+	border:1px solid #2dabf9;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	padding:9px 23px;
+	text-decoration:none;
+  width: 100%;
+  min-height: 67px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.myButton:hover {
+	background-color:#06046A;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+.myButton-return {
+	background-color:#06046A;
+	border-radius:5px;
+	border:1px solid #06046A;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	padding:9px 23px;
+	text-decoration:none;
+  width: 100%;
+  min-height: 67px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.myButton-return:hover {
+	background-color:#2dabf9;
+}
+.myButton-return:active {
+	position:relative;
+	top:1px;
+}
+.waiting {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

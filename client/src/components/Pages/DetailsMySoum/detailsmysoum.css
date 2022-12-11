@@ -11,14 +11,6 @@
     grid-template-rows: 1fr;
     border-bottom: 1px solid black;
 }
-#top-rigth-details-mysoum-container {
-    background-color: rgb(255, 138, 127);
-}
-#bottom-left-details-mysoum-container {
-    display: grid;
-    grid-template-columns: 30% 70%;
-    grid-template-rows: 1fr;
-}
 #title-top-container-left {
     width: 100%;
     height: 100%;
@@ -33,12 +25,79 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(12, 1fr);
 }
-#bottom-rigth-details-mysoum-container {
-    background-color: rgb(242, 255, 127);
-}
 .title-ref {
     font-size: large;
 }
 .title-ref-data {
     font-size: large;
+}
+#top-rigth-details-mysoum-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30% 70%;
+}
+#top-rigth-details-mysoum-container-top {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#top-rigth-details-mysoum-container-bottom {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2vw;
+}
+
+#bottom-left-details-mysoum-container {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+}
+#title-bottom-container-left {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, 1fr);
+}
+#title-bottom-container-rigth {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, 1fr);
+}
+#form-submit-mypart {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    margin: 0 5%;
+}
+#form-submit-mypart-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+}
+#form-submit-mypart-input input {
+    appearance: textfield;
+    min-height: 0%;
+    height: 90%;
+    padding:0px 23px;
+}
+#form-submit-mypart-input p {
+    color: white;
+}
+#form-submit-mypart button {
+    min-height: 0%;
+    height: 100%;
+    padding:0px 15px;
+}
+
+
+#bottom-rigth-details-mysoum-container {
+    width: 100%;
+    height: 100%;
 }

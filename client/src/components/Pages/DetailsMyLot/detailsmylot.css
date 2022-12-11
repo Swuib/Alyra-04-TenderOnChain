@@ -1,0 +1,187 @@
+#main-container-details-lot {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60% 40%;
+}
+#container-details-lot-top {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-template-rows: 1fr;
+    border-bottom: solid 1px black;
+}
+#container-details-lot-top-left {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 40% 60%;
+}
+#container-details-lot-top-left-top {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+    border-bottom: solid 1px black;
+}
+#container-details-lot-top-left-top-left {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+#container-details-lot-top-left-top-rigth {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+#container-details-lot-top-left-bottom {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr;
+}
+#container-details-lot-top-left-bottom-left {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+#container-details-lot-top-left-bottom-rigth {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+#container-details-lot-top-left-top-left p,
+#container-details-lot-top-left-top-rigth p,
+#container-details-lot-top-left-bottom-left p,
+#container-details-lot-top-left-bottom-rigth p {
+    height: 3vh;
+}
+svg {
+    height: 34px;
+    width: 34px;
+    fill: #2dabf9;
+}
+svg:hover{
+    fill:#06046A;
+}
+
+#container-details-lot-top-rigth {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 10% 16% 4% 70%;
+}
+#container-details-lot-top-rigth a {
+    margin: 0 5%;
+}
+#container-details-lot-top-rigth-attribution-container {
+    height: 100%;
+    width: 90%;
+    padding:0 5%;
+}
+#container-details-lot-top-rigth-attribution-container-selected {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 25% 25% 50%;
+    align-items: center;
+    text-align: center;
+}
+#title-corp {
+    font-size: 1vw;
+}
+#corp {
+    font-size: 1.5vw;
+}
+#container-details-lot-top-rigth-attribution-container-selected-action {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 45% 10% 45%;
+}
+
+
+
+
+
+
+
+#container-details-lot-bottom {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 85%;
+}
+#top-bottom-details-details-lot {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+#top-bottom-details-details-lot p {
+    font-size: 24px;
+}
+#bottom-bottom-details {
+    width: 100%;
+    height: 100%;
+}
+#bottom-bottom-details-lot {
+    width: 100%;
+    height: 100%;
+}
+#td-array-my-ao-soum-details-lot {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 85%;
+}
+#title-data-array-my-ao-soum-details-lot {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    text-align: center;
+    align-items: center;
+}
+#title-data-array-my-ao-soum-details-lot p {
+    font-size: 17px;
+}
+#data-array-my-ao-soum-details-lot {
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+}
+.data-myao-soum {
+    width: 100%;
+    height: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    text-align: center;
+    font-size: 1vw;
+    align-items: center;
+}
+#data-array-my-ao-soum-details-lot p {
+    font-size: 30px;
+}

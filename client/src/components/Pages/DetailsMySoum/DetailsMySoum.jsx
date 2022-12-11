@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useEth } from '../../../contexts/EthContext';
 import Header from '../../Layout/Header/Header';
 import NavInfo from '../../Layout/NavInfo/NavInfo';
@@ -7,21 +8,19 @@ import toast from 'react-hot-toast';
 import './detailsmysoum.css';
 import axios from 'axios';
 import Loader from '../../Layout/Loader/Loader';
-import { convertDateToLocal } from '../../Utils/Utils';
+import { convertDateToLocal,compareDate} from '../../Utils/Utils';
 
 const DetailsMySoum = () => {
-    const { state: {artifact,owner, contract, accounts, myParticipation,priceLot },init } = useEth();
+    const { state: {artifact ,owner, contract, accounts, myParticipation, priceLot, userInfo },init,waiting } = useEth();
     const location = useLocation();
     const [locationState,] = useState(location.state);
     const [loading, setLoading] = useState(false);
     const [loadingLoop, setLoadingLoop] = useState(true);
     const [participed, setParticiped] = useState(true);
-    const [submit, setSubmit] = useState(true);
+    const [submit, setSubmit] = useState(false);
     const [participedData, setParticipedData] = useState({});
+    const [winner,] = useState(locationState.value.winner.toLowerCase());
     const [value, setVavlue] = useState(0);
-    console.log(locationState);
-    console.log(myParticipation[0]);
-
 
     useEffect(() => {
         if (myParticipation.length > 0) {
@@ -41,9 +40,6 @@ const DetailsMySoum = () => {
         setLoadingLoop(false);
     }, [locationState.value.index, myParticipation])
     
-
-
-    // createParticipation
     const handleChange = e => {
         setVavlue(e.target.value);
     };
@@ -54,6 +50,7 @@ const DetailsMySoum = () => {
         if (value < locationState.value.minprice || value > locationState.value.maxprice) {
             toast(`Votre proposition dois etre dans la fourchete de Prix !`,
             {style: { height:'50px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
+            setLoading(false);
             return;
         };
 
@@ -62,19 +59,19 @@ const DetailsMySoum = () => {
                 "cidVersion": 1
             },
             "pinataMetadata": {
-                "name": `TENDERONCHAIN-Participation-Ao-${locationState.value.index+1}-Lot-${locationState.value.lastLotId+1}-JSON`,
+                "name": `TENDERONCHAIN-Participation-Ao-${locationState.value.idAO+1}-Lot-${locationState.value.index+1}-JSON`,
                 "keyvalues":{}
             },
             "pinataContent": {
-                "name": `TENDERONCHAIN-Participation-Ao-${locationState.value.index+1}-Lot-${locationState.value.lastLotId+1}-JSON`,
+                "name": `TENDERONCHAIN-Participation-Ao-${locationState.value.idAO+1}-Lot-${locationState.value.index+1}-JSON`,
                 "attributes": [
                     {
                     "trait_type": "AO",
-                    "value": `${locationState.value.index+1}`
+                    "value": `${locationState.value.idAO+1}`
                     },
                     {
                     "trait_type": "LOT",
-                    "value": `${locationState.value.lastLotId+1}`
+                    "value": `${locationState.value.index+1}`
                     },
                     {
                     "trait_type": "OWNER",
@@ -97,15 +94,12 @@ const DetailsMySoum = () => {
             data: data
         };
         await axios(config).catch(async err => {
-            console.log('error upload json');
             console.log(err);
         }).then(async res => {
             const cidJson = `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
             await contract.methods.createParticipation(locationState.value.index, value, cidJson).send({ from: accounts,value:priceLot }).then( async res => {
-                console.log(res);
-    
-                // toast(`Participation ${res.events.LotCreated.returnValues.name} enregisté !`,
-                // {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
+                toast(`Participation enregisté !`,
+                {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
                 setVavlue(0);
                 init(artifact);
                 setLoading(false);
@@ -124,7 +118,6 @@ const DetailsMySoum = () => {
                     {style: { height:'50px', minWidth:'500px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                 else {
                     const errorObject = JSON.parse(error.message.replace("[ethjs-query] while formatting outputs from RPC '", "").slice(0, -1));
-                    console.log(errorObject);
                     toast(errorObject.value.data.message.replace("VM Exception while processing transaction:",""),
                     {style: { height:'50px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     
@@ -134,6 +127,7 @@ const DetailsMySoum = () => {
         });
         setLoading(false);
     };
+
     return (
         <>
             <Header/>
@@ -168,7 +162,7 @@ const DetailsMySoum = () => {
                                 <p className='title-ref-data'>{locationState.value.categorie}</p>
                                 <p className='title-ref-data'>{locationState.value.susCategorie}</p>
                                 <p className='title-ref-data'>{locationState.value.minprice}-{locationState.value.maxprice} €</p>
-                                <p className='title-ref-data'>{locationState.value.TsCloture}</p>
+                                <p className='title-ref-data'>{convertDateToLocal(locationState.value.TsCloture)}</p>
                                 <p className='title-ref-data'>
                                     <a href={`${locationState.value.uriPdf}`} target="_blank" rel="noreferrer">
                                         <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
@@ -192,51 +186,84 @@ const DetailsMySoum = () => {
                             </div>
                         </div>
                         <div id="top-rigth-details-mysoum-container">
-                            affichage NFT Attribution
+                            <div id="top-rigth-details-mysoum-container-top"> 
+                                {locationState.context === 'Mysoum' && (
+                                    <>
+                                        {waiting ? (
+                                            <button className='myButton-return'><Loader size={"small"}/></button>
+                                        ) : (
+                                            <Link 
+                                                to={`/Account/${userInfo.name}/MySoum`}
+                                            >
+                                                <button className='myButton-return'>Retour à ma liste de participation ⮐</button>
+                                            </Link>
+                                        )}
+                                    </>
+                                )}
+                                {locationState.context === 'Soum' && (
+                                    <>
+                                        {waiting ? (
+                                            <button className='myButton-return'><Loader size={"small"}/></button>
+                                        ) : (
+                                            <Link 
+                                                to={`/Account/${userInfo.name}/Soum`}
+                                            >
+                                                <button className='myButton-return'>Retour la liste de participation ⮐</button>
+                                            </Link>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            <div id='top-rigth-details-mysoum-container-bottom'>
+                                {!compareDate(locationState.value.TsCloture) ? (
+                                    <>
+                                        {accounts === winner ? (
+                                            <p>Bravo ! Vous avez remporté ce lot !</p>
+                                        ) : (
+                                            <p>Vous n'avez pas remporté ce lot.</p>
+                                        )}
+                                    </>
+                                ) : (
+                                    <p>la cloture du lot n'a pas encore eu lieu.</p>
+                                )}
+                            </div>
                         </div>
                         <div id="bottom-left-details-mysoum-container">
                             <div id="title-bottom-container-left">
+                                <p></p>
                                 <p className='title-ref'>Mon Entreprise</p>
                                 <p className='title-ref'>Ma proposition</p>
-                                {/* {compareDate(locationState.value.TsCloture) && (
-                                    <>
-                                        date futur
-                                    </>
-                                )} */}
-                                <p className='title-ref'>Date soumission</p>
+                                {participed ? (
+                                    <p className='title-ref'></p>
+                                ) : (
+                                    <p className='title-ref'>Date soumission</p>
+                                )}
                                 {locationState.value.isNftAttributionEmit ? (
                                     <p className='title-ref'>Date attribution</p>
                                 ) : (
                                     <p className='title-ref'></p>
                                 )}
+                                <p></p>
                             </div>
                             <div id="title-bottom-container-rigth">
+                                <p></p>
                                 <p className='title-ref-data'>{locationState.userInfo.name}</p>
-                                {/* {compareDate(locationState.value.TsCloture) ? (
-                                    <>
-                                        date futur
-                                    </>
-                                ) : (
-                                    <>
-                                        date passé
-                                    </>
-                                )} */}
                                 {loadingLoop ? (
                                     <Loader />
                                 ) : (
                                     <>
                                         {participed ? (
-                                            <form onSubmit={handleParticipate}>
-                                                <div>
-                                                    <input type="number" required onChange={handleChange}/>
-                                                    <p>€</p>
+                                            <form onSubmit={handleParticipate} id='form-submit-mypart'>
+                                                <div id='form-submit-mypart-input'>
+                                                    <input type="number" className='myButton' required onChange={handleChange}/>
+                                                    <p className='title-ref-data'>-€</p>
                                                 </div>
                                                 {submit ? (
                                                     <p>Enregistré !</p>
                                                 ) : (
                                                     <>
                                                         {loading ? (
-                                                            <button className="myButton" ><Loader size={"small"}/></button>
+                                                            <button className="myButton" ><Loader size={"mini"}/></button>
                                                         ) : (
                                                             <button className="myButton" type="submit">Envoyer mon offre</button>
                                                         )}
@@ -248,7 +275,7 @@ const DetailsMySoum = () => {
                                                 <p className='title-ref-data'>{participedData.price1}</p>
                                                 <p className='title-ref-data'>{participedData.Tsprice1}</p>
                                                 {locationState.value.isNftAttributionEmit ? (
-                                                    <p className='title-ref-data'>{locationState.value.TsAtt}</p>
+                                                    <p className='title-ref-data'>{convertDateToLocal(locationState.value.TsAtt)}</p>
                                                 ) : (
                                                     <p className='title-ref'></p>
                                                 )}
@@ -256,10 +283,11 @@ const DetailsMySoum = () => {
                                         )}
                                     </>
                                 )}
+                                <p></p>
                             </div>
                         </div>
                         <div id="bottom-rigth-details-mysoum-container">
-                            Ce lot vous a été attribué ! Positionnement Prix : 2ème sur 3 participants
+                            
                         </div>
                     </div>
                 </section>

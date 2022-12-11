@@ -9,14 +9,14 @@ const Header = () => {
         <header>
             <div id="left-header">
                 <Link to='/'>
-                    <p>TenderOfChain</p>
+                    <p>TenderOnChain</p>
                 </Link>
             </div>
             <div id="middle-header">
-                MIDDLE
+                
             </div>
             <div id="rigth-header">
-                <div className="add-container">
+                <div className="address-container">
                     {accounts !== null ? (
                         <p className="add">{accounts.slice(0, -35)}...{accounts.slice(-6)}</p>
                     ) : (

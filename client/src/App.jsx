@@ -1,12 +1,9 @@
 import "./App.css";
-import { useEth } from "./contexts/EthContext";
 import { Toaster } from 'react-hot-toast';
 import Routes from './components/Routes';
 
 const App = () => {
-  const  {state}  = useEth();
-  console.log('-----------------------APP-----------------------');
-  console.log(state);
+
   return (
     <>
     <Toaster
@@ -15,7 +12,7 @@ const App = () => {
           reverseOrder={false}
           gutter={8}
           containerClassName="Toaster-container"
-          containerStyle={{zIndex: "999999999999999999999999"}}
+          containerStyle={{zIndex: "10"}}
           toastOptions={{
             // Define default options
             className: '',

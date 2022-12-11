@@ -7,7 +7,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 20% 80%;
+    grid-template-rows: 30% 70%;
 }
 #top-details-my-ao-container{
     height: 100%;
@@ -20,10 +20,37 @@
 #left-top-details{
     height: 100%;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+#left-top-details p {
+    font-size: 18px; 
 }
 #rigth-top-details{
     height: 100%;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+#rigth-top-details p {
+    font-size: 18px;
+}
+#last-button {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+.button-edit-container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 5% 42.5% 5% 42.5% 5%;
+    grid-template-rows: 1fr;
+    
 }
 #last-button .buttonEdit {
     background-color:#2dabf9;
@@ -32,7 +59,8 @@
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	padding:9px;
+	padding: 0px;
+    height: 100%;
 	text-decoration:none;
     display: flex;
     align-items: center;
@@ -48,17 +76,27 @@
 #bottom-details-my-ao-container{
     height: 100%;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 20% 80%;
 }
 #left-top-bottom-details {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
     align-items: center;
 }
 #left-top-bottom-details p {
     font-size: 25px;
 }
+#rigth-top-bottom-details {
+    display: grid;
+    grid-template-columns: 45% 10% 45%;
+    grid-template-rows: 1fr;
+}
 #top-bottom-details {
     display: grid;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     padding-top: 10px;
 }
@@ -78,6 +116,7 @@
     text-align: center;
     font-size: large;
     padding: 5px 0;
+    border-bottom: 1px solid black;
 }
 .data-myao {
     display: grid;

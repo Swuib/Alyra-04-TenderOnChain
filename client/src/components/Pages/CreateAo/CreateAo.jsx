@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useEth } from '../../../contexts/EthContext';
 import Header from '../../Layout/Header/Header';
@@ -79,10 +80,13 @@ const CreateAo = () => {
                                     </>
                                     ) : (
                                         <> 
-                                            <button className="myButton" onClick={handleNavigate}>Voir mes Appels d'offres</button>
+                                            <button className="myButton-return" onClick={handleNavigate}>Voir mes Appels d'offres</button>
                                             <p>{tx}</p>
                                         </>
                                     )}
+                                    <Link to={`/Account/${userInfo.name}`}>
+                                        <button className='myButton-return'>Retour au compte ⮐</button>
+                                    </Link>
                             </div>
                         </form>
                     </div>

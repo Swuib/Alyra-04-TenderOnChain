@@ -5,11 +5,11 @@ import { useEth } from '../../../contexts/EthContext';
 import Header from '../../Layout/Header/Header';
 import Loader from '../../Layout/Loader/Loader';
 import NavInfo from '../../Layout/NavInfo/NavInfo';
-import { compareDate, getDateInISOFormat, options } from '../../Utils/Utils';
+import { compareDate, convertDateToLocal, getDateInISOFormat, options } from '../../Utils/Utils';
 import './soum.css';
 
 const Soum = () => {
-    const { state: { userInfo, arrayLot,accounts } } = useEth();
+    const { state: { userInfo, arrayLot,accounts },waiting } = useEth();
     const [loading, setLoading] = useState(false);
     const [searchTermName, setSearchTermName] = useState("");
     const [searchByDate, setSearchByDate] = useState("");
@@ -46,8 +46,6 @@ const Soum = () => {
         let filtred = [];
         if (arrayLot.length > 0) {
             for (let i = 0; i < arrayLot.length; i++) {
-
-                // console.log(compareDate(arrayLot[i].TsCloture));
                 if (compareDate(arrayLot[i].TsCloture)) {
                     filtred.push(arrayLot[i]);
                 };
@@ -55,7 +53,6 @@ const Soum = () => {
             setArrayLotFiltred(filtred);
             setLoading(false);
         };
-        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [arrayLot]);
 
@@ -74,20 +71,29 @@ const Soum = () => {
                             <div id='array-soum'>
                                 <div id='top-array-soum'>
                                     <div id="top-array-soum-left">
-                                        <input type="text" placeholder="Rechercher par nom AO" onChange={hanleSearchName} />
-                                        <input type="date" placeholder="Rechercher par date" min={getDateInISOFormat()} onChange={hanleSearchDate} />
-                                        <select value={selectedCategory} required onChange={handleCategorie}>
-                                            <option value={""}>---</option>
-                                            {options.map(opt => <option key={opt.category} value={opt.category}>{opt.category}</option>)}
-                                        </select>
-                                        <select value={susCategory} required onChange={handleSusCategorie}>
-                                            <option value={""}>---</option>
-                                            {selectedCategory && filterOptions(selectedCategory).map(item => <option key={item} value={item}>{item}</option>)}
-                                        </select>
+                                        <div id="title-filter">
+                                            <p>Filtres :</p>
+                                        </div>
+                                        <div id="filter">
+                                            <input type="text" placeholder="Rechercher par Entreprise" onChange={hanleSearchName} />
+                                            <input type="date" placeholder="Rechercher par date" min={getDateInISOFormat()} onChange={hanleSearchDate} />
+                                            <select value={selectedCategory} required onChange={handleCategorie}>
+                                                <option value={""}>Catégories</option>
+                                                {options.map(opt => <option key={opt.category} value={opt.category}>{opt.category}</option>)}
+                                            </select>
+                                            <select value={susCategory} required onChange={handleSusCategorie}>
+                                                <option value={""}>Sous-catégories</option>
+                                                {selectedCategory && filterOptions(selectedCategory).map(item => <option key={item} value={item}>{item}</option>)}
+                                            </select>
+                                        </div>
                                     </div>
                                     <div id="top-array-soum-rigth">
                                         <Link to={`/Account/${userInfo.name}/MySoum`}>
                                             <button className='myButton'>Voir mes participations</button>
+                                        </Link>
+                                        <span></span>
+                                        <Link to={`/Account/${userInfo.name}`}>
+                                            <button className='myButton-return'>Retour au compte ⮐</button>
                                         </Link>
                                     </div>
                                 </div>
@@ -104,48 +110,62 @@ const Soum = () => {
                                         <div className='column'>      </div>
                                     </div>
                                     <div id='data-array'>
-                                        {!loading ? (
-                                            <>
-                                                {arrayLotFiltred
-                                                    // The name filter
-                                                    .filter( (value) => {
-                                                        return value.description.toLowerCase().includes(searchTermName.toLowerCase())
-                                                    })
-                                                    // The date filter
-                                                    .filter( (value) => {
-                                                        return value.TsCloture.includes(searchByDate)
-                                                    })
-                                                    // The cat filter
-                                                    .filter( (value) => {
-                                                        return value.categorie.includes(selectedCategory)
-                                                    })
-                                                    // The suscat filter
-                                                    .filter( (value) => {
-                                                        return value.susCategorie.includes(susCategory)
-                                                    })
-                                                    .map((value, key) => {
-                                                        console.log(value);
-                                                        return(
-                                                            <div key={`data-${key}`} className='data-soum'>   
-                                                                <div className="tr-data">{value.idAO+1}</div>
-                                                                <div className="tr-data">{value.index+1}</div>
-                                                                <div className="tr-data">{value.aoName}</div>
-                                                                <div className="tr-data">{value.categorie}</div>
-                                                                <div className="tr-data">{value.susCategorie}</div>
-                                                                <div className="tr-data">{value.TsCloture}</div>
-                                                                <div className="tr-data">{value.minprice}-{value.maxprice} €</div>
-                                                                <div className="tr-data">{"En cours"}</div>
-                                                                {accounts !== value.adressDDO.toLowerCase() && (
-                                                                    <div className="tr-data"><Link to={`/Account/${userInfo.name}/SoumDetail/${value.index}`} state={{value,userInfo}}><button className='small-button'>Voir</button></Link></div>
-                                                                )}
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
-                                            </>
-                                        ) : (
-                                            <Loader />
-                                        )}
+                                    {waiting === true ? (
+                                        <div className='waiting'>
+                                            <Loader size={"large"}/>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {!loading ? (
+                                                <>
+                                                    {arrayLotFiltred
+                                                        // The name filter
+                                                        .filter( (value) => {
+                                                            return value.aoName.toLowerCase().includes(searchTermName.toLowerCase())
+                                                        })
+                                                        // The date filter
+                                                        .filter( (value) => {
+                                                            return value.TsCloture.includes(searchByDate)
+                                                        })
+                                                        // The cat filter
+                                                        .filter( (value) => {
+                                                            return value.categorie.includes(selectedCategory)
+                                                        })
+                                                        // The suscat filter
+                                                        .filter( (value) => {
+                                                            return value.susCategorie.includes(susCategory)
+                                                        })
+                                                        .map((value, key) => {
+                                                            return(
+                                                                <div key={`data-${key}`} className='data-soum'>   
+                                                                    <div className="tr-data">{value.idAO+1}</div>
+                                                                    <div className="tr-data">{value.index+1}</div>
+                                                                    <div className="tr-data">{value.aoName}</div>
+                                                                    <div className="tr-data">{value.categorie}</div>
+                                                                    <div className="tr-data">{value.susCategorie}</div>
+                                                                    <div className="tr-data">{convertDateToLocal(value.TsCloture)}</div>
+                                                                    <div className="tr-data">{value.minprice}-{value.maxprice} €</div>
+                                                                    <div className="tr-data">{"En cours"}</div>
+                                                                    {accounts !== value.adressDDO.toLowerCase() && (
+                                                                        <div className="tr-data">
+                                                                            <Link 
+                                                                                to={`/Account/${userInfo.name}/SoumDetail/${value.index}`} 
+                                                                                state={{value,userInfo,arrayLot,context:'Soum'}}
+                                                                            >
+                                                                                <button className='small-button'>Voir</button>
+                                                                            </Link>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </>
+                                            ) : (
+                                                <Loader />
+                                            )}
+                                        </>
+                                    )}
                                     </div>
                                 </div>
                             </div>
