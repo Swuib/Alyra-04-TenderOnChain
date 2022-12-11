@@ -259,7 +259,7 @@ const DetailsMySoum = () => {
                                                     <p className='title-ref-data'>-€</p>
                                                 </div>
                                                 {submit ? (
-                                                    <p>Enregistré !</p>
+                                                    <p>Mise à kours des donées...</p>
                                                 ) : (
                                                     <>
                                                         {loading ? (

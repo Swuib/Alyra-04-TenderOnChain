@@ -130,6 +130,7 @@ const DetailsMyLot = () => {
         };
         await axios(config).catch(async err => {
             console.log(err);
+            setLoading(false);
         }).then(async res => {
             const cidJson = `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
             await contract.methods.attribution(
@@ -142,11 +143,13 @@ const DetailsMyLot = () => {
                 ).send({ from: accounts }).then( async res => {
                 toast(`L'entreprise ${participantSelected.name} à été selectionné pour le lot ${location.state.value.index+1} !`,
                 {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
-                setParticipantSelected(prevArray => [...prevArray, {isApproval:true}]);
+                setParticipantSelected({...participantSelected, isApproval:true});
                 init(artifact);
                 setLoading(false);
                 setSubmit(true);
             }).catch(async error => {
+                console.log(error);
+                setLoading(false);
                 const config = {
                     method: 'delete',
                     url: `https://api.pinata.cloud/pinning/unpin/${cidJson}`,
@@ -163,8 +166,7 @@ const DetailsMyLot = () => {
                     toast(errorObject.value.data.message.replace("VM Exception while processing transaction:",""),
                     {style: { height:'50px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     
-                }
-                setLoading(false);
+                };
             });
         });
         setLoading(false);
@@ -221,16 +223,19 @@ const DetailsMyLot = () => {
         };
         await axios(config).catch(async err => {
             console.log(err);
+            setLoading(false);
         }).then(async res => {
             const cidJson = `https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`;
             await contract.methods.attribution(2, location.state.value.idAO, participantSelected.idLot, participantSelected.indexPart, participantSelected.addr, cidJson).send({ from: accounts }).then( async res => {
                 toast(`L'entreprise ${participantSelected.name} à été selectionné pour le lot ${location.state.value.index+1} !`,
                 {style: { height:'50px', background:'#1dc200',color:'white', fontSize:"15px", padding:'0px 15px'}});
-                setParticipantSelected(prevArray => [...prevArray, {isRealisation:true}]);
+                setParticipantSelected({...participantSelected, isRealisation:true});
                 init(artifact);
                 setLoading(false);
                 setSubmit(true);
             }).catch(async error => {
+                console.log(error);
+                setLoading(false);
                 const config = {
                     method: 'delete',
                     url: `https://api.pinata.cloud/pinning/unpin/${cidJson}`,
@@ -247,12 +252,11 @@ const DetailsMyLot = () => {
                     toast(errorObject.value.data.message.replace("VM Exception while processing transaction:",""),
                     {style: { height:'50px', background:'#ff2626',color:'white', fontSize:"15px", padding:'0px 15px'}});
                     
-                }
-                setLoading(false);
+                };
             });
         });
         setLoading(false);
-    }
+    };
     
     return (
         <>
@@ -349,8 +353,10 @@ const DetailsMyLot = () => {
                                                             <button className="myButton" ><Loader size={"small"}/></button>
                                                         ) : (
                                                             <>
-                                                                {!participantSelected.isRealisation && (
+                                                                {!participantSelected.isRealisation ? (
                                                                     <button className="myButton" onClick={handleSelectRealisation}>Valider la réalistaion</button>
+                                                                ) : (
+                                                                    <span></span>
                                                                 )}
                                                             </>
                                                         )}

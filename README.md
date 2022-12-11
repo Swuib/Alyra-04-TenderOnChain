@@ -10,7 +10,7 @@ It meets many challenges, including strengthening the bond of trust between econ
 ## Short video presentation of the Dapp :
 
 
-
+[![Watch the video](https://img.youtube.com/vi/4IqwDoNhZRY/maxresdefault.jpg)](https://youtu.be/4IqwDoNhZRY)
 
 
 ---
@@ -24,16 +24,57 @@ This Dapp is accessible for testing purpose at this address :
 ## Contract address on Fuji Test Network :
 
 ```
-    
+  0x21952c1266804F8d0fdCB48f703e8B639a49c3D2
 ```    
- Link : [snowtrace](https://testnet.snowtrace.io/)
+ Link : [snowtrace](https://testnet.snowtrace.io/address/0x21952c1266804f8d0fdcb48f703e8b639a49c3d2)
 
 ---
 
 ## fuji deployment :
 
 ```
-  
+  Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+
+Starting migrations...
+======================
+> Network name:    'fuji'
+> Network id:      43113
+> Block gas limit: 8000000 (0x7a1200)
+
+
+1_deploy_tender_on_chain.js
+===========================
+
+   Deploying 'TenderOnChain'
+   -------------------------
+   > transaction hash:    0xb2084da401aaf7dac9b027715e9c02303a241c2ea4ba2ae3c7d7708c2692242c
+   > Blocks: 0            Seconds: 0
+   > contract address:    0x21952c1266804F8d0fdCB48f703e8B639a49c3D2
+   > block number:        16818600
+   > block timestamp:     1670792265
+   > account:             0x9B35Fa8639bB06712600840184c3707f0eBbF012
+   > balance:             11.8833574872330675
+   > gas used:            3918009 (0x3bc8b9)
+   > gas price:           27.5 gwei
+   > value sent:          0 ETH
+   > total cost:          0.1077452475 ETH
+
+   Pausing for 5 confirmations...
+
+   -------------------------------
+   > confirmation number: 3 (block: 16818601)
+   > confirmation number: 5 (block: 16818603)
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:        0.1077452475 ETH
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.1077452475 ETH
 
 ```
 

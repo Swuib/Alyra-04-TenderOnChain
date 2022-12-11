@@ -12,8 +12,8 @@ function EthProvider({ children }) {
     async artifact => {
       if (artifact) {
         // change for deploy <======================
-        const networkIDValid = 5777; 
-        const valueBlock = 0; 
+        const networkIDValid = 43113; 
+        const valueBlock = 16818600;
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
@@ -275,8 +275,6 @@ function EthProvider({ children }) {
           myParticipationLength
         } = await isMetaMaskConnected();
         setWaiting(false);
-        console.error('waiting provider : ');
-        console.error(waiting);
 
         dispatch({
           type: actions.init,

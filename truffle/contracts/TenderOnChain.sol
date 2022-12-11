@@ -4,17 +4,17 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 /// @title TenderOnChain
-/// @author Swuib and Sebastien HOFF
-/// @notice This contract ...
+/// @author Swuib (sorry is public) and Sebastien HOFF
+/// @notice this contract is a contract of connection for the walk of the invitations to tender.
 contract TenderOnChain is ERC721URIStorage {
 
   address public owner = msg.sender;                                                // adresse du proprietaire du contract
-  address payable public dev = payable(0x9B35Fa8639bB06712600840184c3707f0eBbF012); // adrress du developpeur 1
+  address payable public dev = payable(0x9B35Fa8639bB06712600840184c3707f0eBbF012); // (change adrres for deploy testnet) adrress du developpeur 1
 
   uint8 private maxLot = 30;                      // defini le nombre de lot max que peut contenir un lot
   uint private NftId;                             // defini l'id du nft
-  uint public priceAO = 100 wei;//1 ether;                  // defini le montant à virer pour la creation de l'AO
-  uint public priceLot = 50 wei; //100000000000000000 wei;  // defini le montant à virer pour la participation à un lot
+  uint public priceAO = 1 ether;                  // (100 wei pour tests unitaires)  defini le montant à virer pour la creation de l'AO
+  uint public priceLot = 100000000000000000 wei;  // (50 wei pour tests unitaires) defini le montant à virer pour la participation à un lot
   uint public aoLength;                           // defini le nombre total AO
   uint public lotLength;                          // defini le nombre total de lot
   uint public userLength;                         // defini le nombre total d'utilisateur
