@@ -39,7 +39,26 @@ module.exports = {
       network_id: 43113,
       timeoutBlocks: 200,
       confirmations: 5,
+      gas: 3000000,
+      gasPrice: 50,
+      skipDryRun: true
     },
+
+
+    goerli: {
+      provider: () => {return new HDWalletProvider({mnemonic:{phrase:`${process.env.MNEMONIC}`},providerOrUrl:`https://goerli.infura.io/v3/${process.env.INFURA_ID}`})},
+      network_id: 5,       // Goerli's network id
+      // chain_id: 5,         // Goerli's chain id
+      // gas: 5500000,        // Gas limit used for deploys.
+      // confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+      // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets)
+    }
+
+
+
+
+    
   },
 
   /**

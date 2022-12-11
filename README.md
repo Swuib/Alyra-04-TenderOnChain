@@ -17,32 +17,33 @@ It meets many challenges, including strengthening the bond of trust between econ
 
 ## Website link :
 
-This Dapp is accessible for testing purpose at this address : 
+This Dapp is accessible for testing purpose at this address : https://alyra-04-tender-on-chain.vercel.app
 
 ---
 
-## Contract address on Fuji Test Network :
+## Contract address on Göerli Test Network :
 
 ```
-  0x21952c1266804F8d0fdCB48f703e8B639a49c3D2
+  0xD25BEB9dA6f09159100ADD08Bf0a1b42A3B6AC50
 ```    
- Link : [snowtrace](https://testnet.snowtrace.io/address/0x21952c1266804f8d0fdcb48f703e8b639a49c3d2)
+ Link : [etherscan](https://goerli.etherscan.io/tx/0xc4ef8059cd6263d1785873fb2fa3e87c44a298a4ce72b600ef4bcb8c627c3e19)
 
 ---
 
-## fuji deployment :
+## Göerli deployment :
 
 ```
-  Compiling your contracts...
+
+Compiling your contracts...
 ===========================
 > Everything is up to date, there is nothing to compile.
 
 
-Starting migrations...
-======================
-> Network name:    'fuji'
-> Network id:      43113
-> Block gas limit: 8000000 (0x7a1200)
+Migrations dry-run (simulation)
+===============================
+> Network name:    'goerli-fork'
+> Network id:      5
+> Block gas limit: 30000000 (0x1c9c380)
 
 
 1_deploy_tender_on_chain.js
@@ -50,31 +51,59 @@ Starting migrations...
 
    Deploying 'TenderOnChain'
    -------------------------
-   > transaction hash:    0xb2084da401aaf7dac9b027715e9c02303a241c2ea4ba2ae3c7d7708c2692242c
-   > Blocks: 0            Seconds: 0
-   > contract address:    0x21952c1266804F8d0fdCB48f703e8B639a49c3D2
-   > block number:        16818600
-   > block timestamp:     1670792265
+   > block number:        8118934
+   > block timestamp:     1670802665
    > account:             0x9B35Fa8639bB06712600840184c3707f0eBbF012
-   > balance:             11.8833574872330675
-   > gas used:            3918009 (0x3bc8b9)
-   > gas price:           27.5 gwei
+   > balance:             0.379325752614586898
+   > gas used:            3957986 (0x3c64e2)
+   > gas price:           2.500152836 gwei
    > value sent:          0 ETH
-   > total cost:          0.1077452475 ETH
+   > total cost:          0.009895569922748296 ETH
 
-   Pausing for 5 confirmations...
-
-   -------------------------------
-   > confirmation number: 3 (block: 16818601)
-   > confirmation number: 5 (block: 16818603)
-   > Saving artifacts
    -------------------------------------
-   > Total cost:        0.1077452475 ETH
+   > Total cost:     0.009895569922748296 ETH
 
 Summary
 =======
 > Total deployments:   1
-> Final cost:          0.1077452475 ETH
+> Final cost:          0.009895569922748296 ETH
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'goerli'
+> Network id:      5
+> Block gas limit: 30000000 (0x1c9c380)
+
+
+1_deploy_tender_on_chain.js
+===========================
+
+   Deploying 'TenderOnChain'
+   -------------------------
+   > transaction hash:    0xc4ef8059cd6263d1785873fb2fa3e87c44a298a4ce72b600ef4bcb8c627c3e19
+   > Blocks: 1            Seconds: 16
+   > contract address:    0xD25BEB9dA6f09159100ADD08Bf0a1b42A3B6AC50
+   > block number:        8118940
+   > block timestamp:     1670802684
+   > account:             0x9B35Fa8639bB06712600840184c3707f0eBbF012
+   > balance:             0.379325642657777832
+   > gas used:            3957986 (0x3c64e2)
+   > gas price:           2.500180617 gwei
+   > value sent:          0 ETH
+   > total cost:          0.009895679879557362 ETH
+
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.009895679879557362 ETH
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.009895679879557362 ETH
+
 
 ```
 

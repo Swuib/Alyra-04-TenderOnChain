@@ -18,7 +18,7 @@ contract TenderOnChain is ERC721URIStorage {
   uint public aoLength;                           // defini le nombre total AO
   uint public lotLength;                          // defini le nombre total de lot
   uint public userLength;                         // defini le nombre total d'utilisateur
-
+  address[] public users;                         // tableux des utilisateurs car probleme avec event en js qui ralentisait la dapp sur le testnet
   
   /// @notice  structure des utilisateurs
   /// @dev  structure des utilisateurs
@@ -196,6 +196,7 @@ contract TenderOnChain is ERC721URIStorage {
     require(msg.sender != owner, "pas owner");
     require(mappingUsers[msg.sender].isRegistred != true, "Vous etes deja inscrit");
     require(keccak256(abi.encode(_name)) != keccak256(abi.encode("")), "Vous ne pouvez pas mettre rien comme nom");
+    users.push(msg.sender);
     mappingUsers[msg.sender].isRegistred = true;
     mappingUsers[msg.sender].name = _name;
     userLength = userLength + 1;

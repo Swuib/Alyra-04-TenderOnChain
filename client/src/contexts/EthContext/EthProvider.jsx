@@ -12,8 +12,7 @@ function EthProvider({ children }) {
     async artifact => {
       if (artifact) {
         // change for deploy <======================
-        const networkIDValid = 43113; 
-        const valueBlock = 16818600;
+        const networkIDValid = 5777; 
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
@@ -36,7 +35,8 @@ function EthProvider({ children }) {
             myArrayLotId = [], 
             myArrayAo = [], 
             myArrayLot = [], 
-            myParticipation = [];
+            myParticipation = [],
+            usersAccount=[];
           
           if (accounts.length === 1 && contract !== undefined && address !== undefined) {
             accounts = accounts[0].toLowerCase();
@@ -75,7 +75,7 @@ function EthProvider({ children }) {
               
               if (userErr === "") {
   
-                let oldEventsAccount = await contract.getPastEvents('userAdded', {fromBlock: valueBlock, toBlock: 'latest'});
+                // let oldEventsAccount = await contract.getPastEvents('userAdded', {fromBlock: valueBlock, toBlock: 'latest'});
                 // owner
                 owner = await contract.methods.owner().call({ from: accounts });
                 owner = owner.toLowerCase();
@@ -95,7 +95,15 @@ function EthProvider({ children }) {
                 // Participant length
                 myParticipationLength = await contract.methods.getParticipationLength(accounts).call({ from: accounts });
                 myParticipationLength = Number(myParticipationLength);
-  
+
+                if (userLength > 0) {
+                  for (let index = 0; index < userLength; index++) {
+                    const users = await contract.methods.users(index).call({ from: accounts });
+                    const repuser = await contract.methods.getAccount(accounts).call({from: accounts })
+                    usersAccount.push({address:users, name:repuser.name})
+                  }                  
+                }
+
                 if (aoLength > 0) {
                   for (let i = 0; i < aoLength; i++) {
                     const respAo = await contract.methods.arrayAO(i).call({ from: accounts });
@@ -128,12 +136,12 @@ function EthProvider({ children }) {
                     added = false;
                     for (let a = 0; a < arrayAo.length; a++) {
                       if (arrayAo[a].adressDDO === respLot.adressDDO && !added) {
-                        if (oldEventsAccount.length > 0) {
-                          for (let b = 0; b < oldEventsAccount.length; b++) {
-                            if (oldEventsAccount[b].returnValues.user === respLot.adressDDO ) {
+                        if (usersAccount.length > 0) {
+                          for (let b = 0; b < usersAccount.length; b++) {
+                            if (usersAccount[b].address === respLot.adressDDO ) {
                               arrayLot.push({
                                 index:i,
-                                name: oldEventsAccount[b].returnValues.name, 
+                                name: usersAccount[b].name, 
                                 adressDDO:respLot.adressDDO,
                                 aoName:arrayAo[a].aoName, 
                                 description:respLot.description,
@@ -156,7 +164,7 @@ function EthProvider({ children }) {
                                 myArrayLotId.push(i);
                                 myArrayLot.push({
                                   index:i,
-                                  name:oldEventsAccount[b].returnValues.name, 
+                                  name:usersAccount[b].name, 
                                   adressDDO:respLot.adressDDO,
                                   aoName:arrayAo[a].aoName, 
                                   description:respLot.description,
@@ -236,7 +244,8 @@ function EthProvider({ children }) {
             myArrayLotId,
             myArrayLot,
             myParticipation,
-            myParticipationLength
+            myParticipationLength,
+            usersAccount
           }
         };
         
@@ -272,7 +281,8 @@ function EthProvider({ children }) {
           myArrayLotId,
           myArrayLot,
           myParticipation,
-          myParticipationLength
+          myParticipationLength,
+          usersAccount
         } = await isMetaMaskConnected();
         setWaiting(false);
 
@@ -300,7 +310,8 @@ function EthProvider({ children }) {
             myArrayLot,
             networkIDValid,
             myParticipation,
-            myParticipationLength
+            myParticipationLength,
+            usersAccount
           }
         });
       }

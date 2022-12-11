@@ -12,7 +12,7 @@ import { compareDate, convertDateToLocal, ConvertEpochToLocalDate } from '../../
 import './detailsmylot.css'
 
 const DetailsMyLot = () => {
-    const { state: {artifact, owner, userInfo, contract, accounts },init } = useEth();
+    const { state: {artifact, owner, userInfo, contract, accounts,usersAccount },init } = useEth();
     const location = useLocation();
     const [locationState,] = useState(location.state);
     const [participant, setParticipant] = useState();
@@ -26,23 +26,16 @@ const DetailsMyLot = () => {
             if (locationState.value.partLengt > 0) {
                 const fetechdata = async () => {
                     setWaiting(true);
-                    let arrayUser = [];
-                    let oldEventsAccount = await contract.getPastEvents('userAdded', { fromBlock: 0, toBlock: 'latest' });
-                    if (oldEventsAccount.length > 0) {
-                        for (let i = 0; i < oldEventsAccount.length; i++) {
-                          arrayUser.push(oldEventsAccount[i].returnValues.user);
-                        };
-                    };
                     let arrPart =[];
-                    for (let i = 0; i < arrayUser.length; i++) {
+                    for (let i = 0; i < usersAccount.length; i++) {
                         try {
-                            const respUser = await contract.methods.getAccount(arrayUser[i]).call({from: accounts })
+                            const respUser = await contract.methods.getAccount(usersAccount[i].address).call({from: accounts })
                             for (let a = 0; a < respUser.countParticipation; a++) {
-                                const respPart = await contract.methods.getParticipation(arrayUser[i],a, locationState.value.index).call({ from: accounts });
+                                const respPart = await contract.methods.getParticipation(usersAccount[i].address,a, locationState.value.index).call({ from: accounts });
                                 if (locationState.value.index === Number(respPart.idLot)) {
                                     if (respPart.isWinner === true) {
                                         setParticipantSelected({
-                                            addr:arrayUser[i],
+                                            addr:usersAccount[i].address,
                                             name:respUser.name,
                                             indexPart:a,
                                             isApproval:respUser.isApproval,
@@ -56,7 +49,7 @@ const DetailsMyLot = () => {
                                         });
                                     } 
                                     arrPart.push({
-                                        addr:arrayUser[i],
+                                        addr:usersAccount[i].address,
                                         name:respUser.name,
                                         indexPart:a,
                                         isApproval:respUser.isApproval,
@@ -409,28 +402,36 @@ const DetailsMyLot = () => {
                                                     <>
                                                         {participant !== undefined && (
                                                             <>  
-                                                                 {participant.length > 0 && (
+                                                                {waiting === true || loading ? (
+                                                                    <div className='waiting'>
+                                                                        <Loader size={"large"}/>
+                                                                    </div>
+                                                                ) : (
                                                                     <>
-                                                                        {participant.map((value, key) => {
-                                                                            return(
-                                                                                <div key={key} className='data-myao-soum'>   
-                                                                                    <div className="tr-data">{value.name}</div>
-                                                                                    <div className="tr-data">{convertDateToLocal(value.Tsprice1)}</div>
-                                                                                    <div className="tr-data">{value.price1}</div>
-                                                                                    <div className="tr-data">{value.isWinner ? "✅" : ""}</div>
-                                                                                    <div className="tr-data">{value.isRealisation ? "✅" : ""}</div>
-                                                                                    {!value.isWinner ? (
-                                                                                        <>
-                                                                                            {participantSelected === undefined && (
-                                                                                                <div className="tr-data">
-                                                                                                    <button className='small-button' onClick={()=>{setParticipantSelected(value)}}>Attribuer ce lot</button>
-                                                                                                </div>
-                                                                                            )}
-                                                                                        </>
-                                                                                    ) : (<></>)}
-                                                                                </div>
-                                                                            )
-                                                                        })}
+                                                                    {participant.length > 0 && (
+                                                                        <>
+                                                                            {participant.map((value, key) => {
+                                                                                return(
+                                                                                    <div key={key} className='data-myao-soum'>   
+                                                                                        <div className="tr-data">{value.name}</div>
+                                                                                        <div className="tr-data">{convertDateToLocal(value.Tsprice1)}</div>
+                                                                                        <div className="tr-data">{value.price1}</div>
+                                                                                        <div className="tr-data">{value.isWinner ? "✅" : ""}</div>
+                                                                                        <div className="tr-data">{value.isRealisation ? "✅" : ""}</div>
+                                                                                        {!value.isWinner ? (
+                                                                                            <>
+                                                                                                {participantSelected === undefined && (
+                                                                                                    <div className="tr-data">
+                                                                                                        <button className='small-button' onClick={()=>{setParticipantSelected(value)}}>Attribuer ce lot</button>
+                                                                                                    </div>
+                                                                                                )}
+                                                                                            </>
+                                                                                        ) : (<></>)}
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+                                                                        </>
+                                                                    )}
                                                                     </>
                                                                 )}
                                                             </>
