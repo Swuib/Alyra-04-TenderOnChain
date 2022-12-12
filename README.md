@@ -24,9 +24,9 @@ This Dapp is accessible for testing purpose at this address : https://alyra-04-t
 ## Contract address on Göerli Test Network :
 
 ```
-  0xD25BEB9dA6f09159100ADD08Bf0a1b42A3B6AC50
+  0xC5eB091D163435510f06D146d4DA3218ed0F4A61
 ```    
- Link : [etherscan](https://goerli.etherscan.io/tx/0xc4ef8059cd6263d1785873fb2fa3e87c44a298a4ce72b600ef4bcb8c627c3e19)
+ Link : [etherscan](https://goerli.etherscan.io/tx/0x2fa7d8842baa9652added86c73d48e1a1a37f20d95d3752f0c423d07badfa9a3)
 
 ---
 
@@ -51,22 +51,22 @@ Migrations dry-run (simulation)
 
    Deploying 'TenderOnChain'
    -------------------------
-   > block number:        8118934
-   > block timestamp:     1670802665
+   > block number:        8119347
+   > block timestamp:     1670808619
    > account:             0x9B35Fa8639bB06712600840184c3707f0eBbF012
-   > balance:             0.379325752614586898
+   > balance:             0.569429959536629936
    > gas used:            3957986 (0x3c64e2)
-   > gas price:           2.500152836 gwei
+   > gas price:           2.500181436 gwei
    > value sent:          0 ETH
-   > total cost:          0.009895569922748296 ETH
+   > total cost:          0.009895683121147896 ETH
 
    -------------------------------------
-   > Total cost:     0.009895569922748296 ETH
+   > Total cost:     0.009895683121147896 ETH
 
 Summary
 =======
 > Total deployments:   1
-> Final cost:          0.009895569922748296 ETH
+> Final cost:          0.009895683121147896 ETH
 
 
 
@@ -83,26 +83,26 @@ Starting migrations...
 
    Deploying 'TenderOnChain'
    -------------------------
-   > transaction hash:    0xc4ef8059cd6263d1785873fb2fa3e87c44a298a4ce72b600ef4bcb8c627c3e19
-   > Blocks: 1            Seconds: 16
-   > contract address:    0xD25BEB9dA6f09159100ADD08Bf0a1b42A3B6AC50
-   > block number:        8118940
-   > block timestamp:     1670802684
+   > transaction hash:    0x2fa7d8842baa9652added86c73d48e1a1a37f20d95d3752f0c423d07badfa9a3
+   > Blocks: 1            Seconds: 12
+   > contract address:    0xC5eB091D163435510f06D146d4DA3218ed0F4A61
+   > block number:        8119352
+   > block timestamp:     1670808636
    > account:             0x9B35Fa8639bB06712600840184c3707f0eBbF012
-   > balance:             0.379325642657777832
+   > balance:             0.569429869049154004
    > gas used:            3957986 (0x3c64e2)
-   > gas price:           2.500180617 gwei
+   > gas price:           2.500204298 gwei
    > value sent:          0 ETH
-   > total cost:          0.009895679879557362 ETH
+   > total cost:          0.009895773608623828 ETH
 
    > Saving artifacts
    -------------------------------------
-   > Total cost:     0.009895679879557362 ETH
+   > Total cost:     0.009895773608623828 ETH
 
 Summary
 =======
 > Total deployments:   1
-> Final cost:          0.009895679879557362 ETH
+> Final cost:          0.009895773608623828 ETH
 
 
 ```
