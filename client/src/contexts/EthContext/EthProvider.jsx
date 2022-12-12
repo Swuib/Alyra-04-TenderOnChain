@@ -13,6 +13,8 @@ function EthProvider({ children }) {
       if (artifact) {
         // change for deploy <======================
         const networkIDValid = 5;
+        // ==use this for testnet===================
+        // const networkIDValid = Your network value;
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
@@ -56,10 +58,6 @@ function EthProvider({ children }) {
               userErr = "";
             }).catch(error => {
               setWaiting(false);
-       console.log(error.toString().replace("Error: execution reverted:", ""));
-               console.log(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
-              const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
-       console.log(errorObject);
               userInfo = {
                 name: null,
                 isRegistred: null,
@@ -71,6 +69,15 @@ function EthProvider({ children }) {
                 countNFTWinner:null,
                 countParticipation:null
               };
+               console.log(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
+              
+              
+              // change for deploy <======================
+              const errorObject = JSON.parse(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
+       console.log(errorObject);
+              // ==use this for testnet===================
+              // const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
+              // =========================================
               userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
               
             });
