@@ -56,7 +56,7 @@ function EthProvider({ children }) {
               userErr = "";
             }).catch(error => {
               setWaiting(false);
-       console.log(error.toString().replace("Error: Internal JSON-RPC error.", "");
+       console.log(error.toString())//.replace("Error: Internal JSON-RPC error.", "");
               const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
        console.log(errorObject);
               userInfo = {
