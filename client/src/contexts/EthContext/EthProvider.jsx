@@ -55,6 +55,7 @@ function EthProvider({ children }) {
               };
               userErr = "";
             }).catch(error => {
+              setWaiting(false);
               const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
               userInfo = {
                 name: null,
@@ -68,7 +69,6 @@ function EthProvider({ children }) {
                 countParticipation:null
               };
               userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
-              setWaiting(false);
             });
             
             try {
