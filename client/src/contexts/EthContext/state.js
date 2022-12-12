@@ -11,7 +11,8 @@ const initialState = {
   owner: null,
   userInfo: null,
   userErr: null,
-  waiting: true
+  waiting: true,
+  networkIDValid:5
 };
 
 const reducer = (state, action) => {
