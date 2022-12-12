@@ -286,8 +286,9 @@ function EthProvider({ children }) {
           myParticipationLength,
           usersAccount
         } = await isMetaMaskConnected();
+  console.log(waiting);
         setWaiting(false);
-
+  console.log(waiting);
         dispatch({
           type: actions.init,
           data: { 
