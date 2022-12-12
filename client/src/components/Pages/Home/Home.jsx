@@ -50,9 +50,7 @@ const Home = () => {
     const connect = () => {
         window.ethereum.request({ method: 'eth_requestAccounts' });
     };
-    
-    console.log(networkID, networkIDValid);
-    console.log(networkID === networkIDValid);
+
     return (
         <>
             <Header/>
