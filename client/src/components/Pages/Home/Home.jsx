@@ -8,7 +8,7 @@ import './home.css';
 import Loader from '../../Layout/Loader/Loader';
 
 const Home = () => {
-    const { state: { contract, accounts , userInfo, userErr,networkID, networkIDValid }, waiting } = useEth();
+    const { state: { contract, accounts , userInfo, userErr,networkID }, waiting } = useEth();
     const [nameForm, setNameForm] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -77,7 +77,6 @@ const Home = () => {
                                     et la concurrence grâce à la technologie blockchain.</p>
                                 </div>
                                 <div className="rigth-container">
-                                    {networkID === networkIDValid ? (
                                         <>
                                             {accounts !== null ? (
                                                 <>
@@ -106,11 +105,6 @@ const Home = () => {
                                                 </div>
                                             )}
                                         </>
-                                    ) : (
-                                        <div className='rigth-sub-container'>
-                                            <p id="network">Vous n'êtes pas connecté sur le bon réseau !</p>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </section>
