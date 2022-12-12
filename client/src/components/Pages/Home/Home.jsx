@@ -55,7 +55,7 @@ const Home = () => {
         <>
             <Header/>
             <main>
-                {waiting === true || networkID === null ? (
+                {waiting === true ? (
                     <>
                         <span></span>
                         <div className='waiting'>
