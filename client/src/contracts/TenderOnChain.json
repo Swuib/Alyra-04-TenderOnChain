@@ -20683,6 +20683,273 @@
       "address": "0xD25BEB9dA6f09159100ADD08Bf0a1b42A3B6AC50",
       "transactionHash": "0xc4ef8059cd6263d1785873fb2fa3e87c44a298a4ce72b600ef4bcb8c627c3e19"
     },
+    "5777": {
+      "events": {
+        "0xe4059cd84df0f528fe8b13d6f5575830c17790dcc1fc8b7bd904ba01df51577d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "indexAO",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "AoCreated",
+          "type": "event"
+        },
+        "0x02f88b92e9c7ac5a92aadd3812ce280db32c0e77f512519826996b59034731f9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "indexAO",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "indexLOT",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "LotCreated",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0x41d935e79cc2c7e6c9125c9c7adbeed470e90b668fade139b04b8c1ca6669d93": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "argentRecu",
+          "type": "event"
+        },
+        "0xafe92cf1e686d40d9fe75324acc5793ff623b23896e8b1edd5b36f2a1bed7c20": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "requestAuditor",
+          "type": "event"
+        },
+        "0xaf0ea5a986d535a6d485f06d0956f5737418735d3ea67305e75152b58b8bc80c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "requestValide",
+          "type": "event"
+        },
+        "0xc9a90fbf0fb8be865c5912642b8b1cb1c9f7e4deceac307ef67978a5aa1f1592": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "codeAction",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "transferSecu",
+          "type": "event"
+        },
+        "0x613fa353b26ebe46477a0a021dfe1ee36cebcda84c794fc0623bef188295a353": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "userAdded",
+          "type": "event"
+        },
+        "0x8374119f2a4546ccc495a5cd8d55d891b8c64e342d10ebfd6f7db0fdf141bbb1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "auditor",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "time",
+              "type": "uint256"
+            }
+          ],
+          "name": "userAudited",
+          "type": "event"
+        },
+        "0x50f5507c2428baff49ee7875d073bd487f89a04190c499d0344dfe7a91bfa654": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "userAuditor",
+          "type": "event"
+        },
+        "0xc21b9cfcceff9f2d82efde7cd64d3fe7bfd7f14b9b0020ed54eb6ae56056e9ac": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "userDeleted",
+          "type": "event"
+        },
+        "0xe99ebf891ecf1848497e78549bd314016c4d1cb85202983ee2949410bc3e6056": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "userUpdated",
+          "type": "event"
+        },
+        "0x8ccb16913133dbcea90d6edb185a43d4a1009b735c51288eb0c08718613d1373": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "indexAO",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "AoEddited",
+          "type": "event"
+        },
+        "0x26c53e58b18e94d9b8ca379ce5e82d5f01dd1151144feb8c63f8163376076074": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "indexLOT",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "LotEddited",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x4dB858B5adc2f5a4d6a740c7ce1dF55830E6AB32",
+      "transactionHash": "0xa660138bf3ca18b996e8b5d694e7510d11499f51054bb70c610a139a5602d375"
+    },
+    "43113": {
+      "events": {},
+      "links": {},
+      "address": "0x21952c1266804F8d0fdCB48f703e8B639a49c3D2",
+      "transactionHash": "0xb2084da401aaf7dac9b027715e9c02303a241c2ea4ba2ae3c7d7708c2692242c"
+    }
   },
   "schemaVersion": "3.4.10",
   "updatedAt": "2022-12-11T23:51:29.166Z",
@@ -20948,4 +21215,1195 @@
     "notice": "this contract is a contract of connection for the walk of the invitations to tender.",
     "version": 1
   }
-}
+} "address"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "16388:32:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_struct$_Participation_$113_storage_$dyn_storage",
+                          "typeString": "struct TenderOnChain.Participation storage ref[] storage ref"
+                        }
+                      },
+                      "id": 1118,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "16421:4:0",
+                      "memberName": "push",
+                      "nodeType": "MemberAccess",
+                      "src": "16388:37:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Participation_$113_storage_$dyn_storage_ptr_$_t_struct$_Participation_$113_storage_$returns$__$bound_to$_t_array$_t_struct$_Participation_$113_storage_$dyn_storage_ptr_$",
+                        "typeString": "function (struct TenderOnChain.Participation storage ref[] storage pointer,struct TenderOnChain.Participation storage ref)"
+                      }
+                    },
+                    "id": 1127,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "16388:98:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1128,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16388:98:0"
+                },
+                {
+                  "expression": {
+                    "id": 1139,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "expression": {
+                        "baseExpression": {
+                          "id": 1129,
+                          "name": "arrayLots",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 121,
+                          "src": "16492:9:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_array$_t_struct$_LOT_$102_storage_$dyn_storage",
+                            "typeString": "struct TenderOnChain.LOT storage ref[] storage ref"
+                          }
+                        },
+                        "id": 1131,
+                        "indexExpression": {
+                          "id": 1130,
+                          "name": "_idlot",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1079,
+                          "src": "16502:6:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "16492:17:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_LOT_$102_storage",
+                          "typeString": "struct TenderOnChain.LOT storage ref"
+                        }
+                      },
+                      "id": 1132,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberLocation": "16510:9:0",
+                      "memberName": "partLengt",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 89,
+                      "src": "16492:27:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 1138,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "expression": {
+                          "baseExpression": {
+                            "id": 1133,
+                            "name": "arrayLots",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 121,
+                            "src": "16522:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_array$_t_struct$_LOT_$102_storage_$dyn_storage",
+                              "typeString": "struct TenderOnChain.LOT storage ref[] storage ref"
+                            }
+                          },
+                          "id": 1135,
+                          "indexExpression": {
+                            "id": 1134,
+                            "name": "_idlot",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1079,
+                            "src": "16532:6:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "16522:17:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_LOT_$102_storage",
+                            "typeString": "struct TenderOnChain.LOT storage ref"
+                          }
+                        },
+                        "id": 1136,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "16540:9:0",
+                        "memberName": "partLengt",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 89,
+                        "src": "16522:27:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "+",
+                      "rightExpression": {
+                        "hexValue": "31",
+                        "id": 1137,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "16552:1:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      "src": "16522:31:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "16492:61:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1140,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16492:61:0"
+                },
+                {
+                  "expression": {
+                    "id": 1153,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "expression": {
+                        "baseExpression": {
+                          "id": 1141,
+                          "name": "mappingUsers",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 126,
+                          "src": "16559:12:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Users_$59_storage_$",
+                            "typeString": "mapping(address => struct TenderOnChain.Users storage ref)"
+                          }
+                        },
+                        "id": 1144,
+                        "indexExpression": {
+                          "expression": {
+                            "id": 1142,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967281,
+                            "src": "16572:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1143,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "16576:6:0",
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "src": "16572:10:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "16559:24:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Users_$59_storage",
+                          "typeString": "struct TenderOnChain.Users storage ref"
+                        }
+                      },
+                      "id": 1145,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberLocation": "16584:18:0",
+                      "memberName": "countParticipation",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 54,
+                      "src": "16559:43:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 1152,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "expression": {
+                          "baseExpression": {
+                            "id": 1146,
+                            "name": "mappingUsers",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 126,
+                            "src": "16605:12:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Users_$59_storage_$",
+                              "typeString": "mapping(address => struct TenderOnChain.Users storage ref)"
+                            }
+                          },
+                          "id": 1149,
+                          "indexExpression": {
+                            "expression": {
+                              "id": 1147,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4294967281,
+                              "src": "16618:3:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 1148,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberLocation": "16622:6:0",
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "src": "16618:10:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "16605:24:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Users_$59_storage",
+                            "typeString": "struct TenderOnChain.Users storage ref"
+                          }
+                        },
+                        "id": 1150,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "16630:18:0",
+                        "memberName": "countParticipation",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 54,
+                        "src": "16605:43:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "+",
+                      "rightExpression": {
+                        "hexValue": "31",
+                        "id": 1151,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "16651:1:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      "src": "16605:47:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "16559:93:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1154,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16559:93:0"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": 1158,
+                            "name": "this",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967268,
+                            "src": "16672:4:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_TenderOnChain_$1498",
+                              "typeString": "contract TenderOnChain"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_contract$_TenderOnChain_$1498",
+                              "typeString": "contract TenderOnChain"
+                            }
+                          ],
+                          "id": 1157,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "nodeType": "ElementaryTypeNameExpression",
+                          "src": "16664:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_address_$",
+                            "typeString": "type(address)"
+                          },
+                          "typeName": {
+                            "id": 1156,
+                            "name": "address",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "16664:7:0",
+                            "typeDescriptions": {}
+                          }
+                        },
+                        "id": 1159,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "nameLocations": [],
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "16664:13:0",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 1160,
+                        "name": "NftId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 21,
+                        "src": "16679:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 1155,
+                      "name": "_mint",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2099,
+                      "src": "16658:5:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
+                        "typeString": "function (address,uint256)"
+                      }
+                    },
+                    "id": 1161,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "16658:27:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1162,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16658:27:0"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 1164,
+                        "name": "NftId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 21,
+                        "src": "16704:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 1165,
+                        "name": "_uri",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1083,
+                        "src": "16711:4:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_string_memory_ptr",
+                          "typeString": "string memory"
+                        }
+                      ],
+                      "id": 1163,
+                      "name": "_setTokenURI",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2671,
+                      "src": "16691:12:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (uint256,string memory)"
+                      }
+                    },
+                    "id": 1166,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "16691:25:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1167,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16691:25:0"
+                },
+                {
+                  "expression": {
+                    "id": 1172,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 1168,
+                      "name": "NftId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 21,
+                      "src": "16722:5:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "commonType": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "id": 1171,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "id": 1169,
+                        "name": "NftId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 21,
+                        "src": "16730:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "+",
+                      "rightExpression": {
+                        "hexValue": "31",
+                        "id": 1170,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "number",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "16738:1:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_rational_1_by_1",
+                          "typeString": "int_const 1"
+                        },
+                        "value": "1"
+                      },
+                      "src": "16730:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "16722:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1173,
+                  "nodeType": "ExpressionStatement",
+                  "src": "16722:17:0"
+                },
+                {
+                  "eventCall": {
+                    "arguments": [
+                      {
+                        "id": 1175,
+                        "name": "_idlot",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1079,
+                        "src": "16764:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "expression": {
+                          "id": 1176,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4294967281,
+                          "src": "16773:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 1177,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "16777:6:0",
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "src": "16773:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 1178,
+                        "name": "NftId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 21,
+                        "src": "16785:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 1174,
+                      "name": "participation",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 218,
+                      "src": "16750:13:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_address_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,address,uint256)"
+                      }
+                    },
+                    "id": 1179,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "16750:41:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1180,
+                  "nodeType": "EmitStatement",
+                  "src": "16745:46:0"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1077,
+              "nodeType": "StructuredDocumentation",
+              "src": "15604:480:0",
+              "text": " @dev Cette fonction permet à un utilisateur enregistré de créer une participation \n      à un lot en fournissant l'ID du lot, le montant de l'offre et l'URI de \n      l'objet non-fongible (NFT) qui sera créé pour l'offre.\n @param _idlot L'ID du lot dans lequel l'utilisateur souhaite participer.\n @param _price Le montant de l'offre de l'utilisateur.\n @param _uri L'URI de l'objet non-fongible (NFT) qui sera créé pour l'offre de l'utilisateur."
+            },
+            "functionSelector": "e1eb044e",
+            "id": 1182,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 1086,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 1085,
+                  "name": "isRegistred",
+                  "nameLocations": [
+                    "16171:11:0"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 265,
+                  "src": "16171:11:0"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "16171:11:0"
+              }
+            ],
+            "name": "createParticipation",
+            "nameLocation": "16096:19:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1084,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1079,
+                  "mutability": "mutable",
+                  "name": "_idlot",
+                  "nameLocation": "16121:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1182,
+                  "src": "16116:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1078,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "16116:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1081,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "16134:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1182,
+                  "src": "16129:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1080,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "16129:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1083,
+                  "mutability": "mutable",
+                  "name": "_uri",
+                  "nameLocation": "16156:4:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1182,
+                  "src": "16142:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 1082,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "16142:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "16115:46:0"
+            },
+            "returnParameters": {
+              "id": 1087,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "16191:0:0"
+            },
+            "scope": 1498,
+            "src": "16087:709:0",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 1200,
+              "nodeType": "Block",
+              "src": "17056:58:0",
+              "statements": [
+                {
+                  "expression": {
+                    "baseExpression": {
+                      "baseExpression": {
+                        "id": 1193,
+                        "name": "mappingParticipation",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 132,
+                        "src": "17069:20:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_Participation_$113_storage_$dyn_storage_$",
+                          "typeString": "mapping(address => struct TenderOnChain.Participation storage ref[] storage ref)"
+                        }
+                      },
+                      "id": 1196,
+                      "indexExpression": {
+                        "expression": {
+                          "id": 1194,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4294967281,
+                          "src": "17090:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 1195,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "17094:6:0",
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "src": "17090:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "IndexAccess",
+                      "src": "17069:32:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_array$_t_struct$_Participation_$113_storage_$dyn_storage",
+                        "typeString": "struct TenderOnChain.Participation storage ref[] storage ref"
+                      }
+                    },
+                    "id": 1198,
+                    "indexExpression": {
+                      "id": 1197,
+                      "name": "_index",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1185,
+                      "src": "17102:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "17069:40:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Participation_$113_storage",
+                      "typeString": "struct TenderOnChain.Participation storage ref"
+                    }
+                  },
+                  "functionReturnParameters": 1192,
+                  "id": 1199,
+                  "nodeType": "Return",
+                  "src": "17062:47:0"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1183,
+              "nodeType": "StructuredDocumentation",
+              "src": "16802:153:0",
+              "text": " @dev Permet de récupérer une participation pour un utilisateur \n @param _index l'index de la participation\n @return la participation"
+            },
+            "functionSelector": "f31bddca",
+            "id": 1201,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 1188,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 1187,
+                  "name": "isRegistred",
+                  "nameLocations": [
+                    "17008:11:0"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 265,
+                  "src": "17008:11:0"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "17008:11:0"
+              }
+            ],
+            "name": "getMyParticipation",
+            "nameLocation": "16967:18:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1186,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1185,
+                  "mutability": "mutable",
+                  "name": "_index",
+                  "nameLocation": "16991:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1201,
+                  "src": "16986:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1184,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "16986:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "16985:13:0"
+            },
+            "returnParameters": {
+              "id": 1192,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1191,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1201,
+                  "src": "17034:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Participation_$113_memory_ptr",
+                    "typeString": "struct TenderOnChain.Participation"
+                  },
+                  "typeName": {
+                    "id": 1190,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1189,
+                      "name": "Participation",
+                      "nameLocations": [
+                        "17034:13:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 113,
+                      "src": "17034:13:0"
+                    },
+                    "referencedDeclaration": 113,
+                    "src": "17034:13:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Participation_$113_storage_ptr",
+                      "typeString": "struct TenderOnChain.Participation"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "17033:22:0"
+            },
+            "scope": 1498,
+            "src": "16958:156:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 1233,
+              "nodeType": "Block",
+              "src": "17455:152:0",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 1223,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "expression": {
+                            "baseExpression": {
+                              "id": 1217,
+                              "name": "arrayLots",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 121,
+                              "src": "17469:9:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_struct$_LOT_$102_storage_$dyn_storage",
+                                "typeString": "struct TenderOnChain.LOT storage ref[] storage ref"
+                              }
+                            },
+                            "id": 1219,
+                            "indexExpression": {
+                              "id": 1218,
+                              "name": "_indexAo",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 1208,
+                              "src": "17479:8:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "nodeType": "IndexAccess",
+                            "src": "17469:19:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_LOT_$102_storage",
+                              "typeString": "struct TenderOnChain.LOT storage ref"
+                            }
+                          },
+                          "id": 1220,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "17489:9:0",
+                          "memberName": "TsCloture",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 81,
+                          "src": "17469:29:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "<",
+                        "rightExpression": {
+                          "expression": {
+                            "id": 1221,
+                            "name": "block",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967292,
+                            "src": "17501:5:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_block",
+                              "typeString": "block"
+                            }
+                          },
+                          "id": 1222,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "17507:9:0",
+                    
