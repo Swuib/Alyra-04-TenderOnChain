@@ -50,7 +50,7 @@ const Home = () => {
     const connect = () => {
         window.ethereum.request({ method: 'eth_requestAccounts' });
     };
-    console.log(accounts);
+
     return (
         <>
             <Header/>
