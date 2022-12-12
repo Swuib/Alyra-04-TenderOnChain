@@ -18,7 +18,6 @@ function EthProvider({ children }) {
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-  console.log(web3);
         async function isMetaMaskConnected() {
           const {ethereum} = window;
           let accounts = await ethereum.request({method: 'eth_accounts'});
@@ -68,22 +67,16 @@ function EthProvider({ children }) {
                 countNFTReal:null,
                 countNFTWinner:null,
                 countParticipation:null
-              };
-               console.log(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
-              
-              
+              };             
               // change for deploy <======================
               const errorObject = JSON.parse(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
-       console.log(errorObject);
-              userErr = errorObject.originalError.message.replace("execution reverted: ", "");
-       console.log(userErr);            
+              userErr = errorObject.originalError.message.replace("execution reverted: ", "");           
               // ==use this for testnet===================
               // const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
               // userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
               // =========================================
-              
             });
-       console.log(userErr);
+            
             try {
               
               if (userErr === "") {
@@ -263,7 +256,7 @@ function EthProvider({ children }) {
         };
         
         const networkID = await web3.eth.net.getId();
-        console.log(networkID);
+
         const { abi } = artifact;
 
         let address, contract;
@@ -276,7 +269,7 @@ function EthProvider({ children }) {
         } catch (err) {
           console.error(err);
         }
-        console.log(address, contract);
+
         const {
           accounts, 
           owner, 
@@ -297,9 +290,9 @@ function EthProvider({ children }) {
           myParticipationLength,
           usersAccount
         } = await isMetaMaskConnected();
-  console.log(waiting);
+        
         setWaiting(false);
-  console.log(waiting);
+        
         dispatch({
           type: actions.init,
           data: { 
