@@ -12,7 +12,7 @@ function EthProvider({ children }) {
     async artifact => {
       if (artifact) {
         // change for deploy <======================
-        const networkIDValid = 5777; 
+        const networkIDValid = 5;
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
