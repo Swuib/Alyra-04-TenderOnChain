@@ -6,6 +6,8 @@
 TenderOnChain is a marketplace based on blockchain technology that aims to improve the contractual relationship between the buyer and his co-contractor. The solution offers to comply with the all-digital logic imposed by the regulations in force since 2019 while guaranteeing transparency, proof of traceability and data security. 
 It meets many challenges, including strengthening the bond of trust between economic actors, and thus reduce the risk of litigation, improve the competitive positioning and offer more visibility to contractors through a reputational scoring (NFT).
 
+PS: If you want to test the project locally, you have to go to ethprovider and modify lines 15 , 75, and 76 because the networks are different and so are the values returned by the blockchain. 
+
 ---
 ## Short video presentation of the Dapp :
 
@@ -146,8 +148,10 @@ Summary
     If you want to launch the contract on the fuji testnet, create a '.env' file in the truffle folder, with your MNEMONIC as variables.
 
     For the frontend side in loacl as well as in testnet, you must create a '.env' in the client folder, with your REACT_APP_PINATA_JWT as variables.
+    
+    PS: If you want to test the project locally, you have to go to ethprovider and modify lines 15 , 75, and 76 because the networks are different and so are the values returned by the blockchain. 
 
-
+___
 
 ## Test result obtained :
 
