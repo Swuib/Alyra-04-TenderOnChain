@@ -76,11 +76,11 @@ function EthProvider({ children }) {
               const errorObject = JSON.parse(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
        console.log(errorObject);
               userErr = errorObject.originalError.message.replace("execution reverted: ", "");
+       console.log(userErr);            
               // ==use this for testnet===================
               // const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
               // userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
               // =========================================
-              userErr = errorObject.message.replace("VM Exception while processing transaction: revert ", "");
               
             });
        console.log(userErr);
