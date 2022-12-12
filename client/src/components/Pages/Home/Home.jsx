@@ -24,8 +24,8 @@ const Home = () => {
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [accounts,waiting,networkID]);
-
+    }, [accounts,waiting,networkID,userErr]);
+console.log(contract, accounts , userInfo, userErr,networkID);
     const handleCreate = async e => {
         setLoading(true);
         e.preventDefault();
