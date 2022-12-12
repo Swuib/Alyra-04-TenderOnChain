@@ -56,7 +56,8 @@ function EthProvider({ children }) {
               userErr = "";
             }).catch(error => {
               setWaiting(false);
-       console.log(error.toString())//.replace("Error: Internal JSON-RPC error.", "");
+       console.log(error.toString().replace("Error: execution reverted:", ""));
+               console.log(error.toString().replace("Error: execution reverted: Vous n'etes pas un utilisateur", ""));
               const errorObject = JSON.parse(error.toString().replace("Error: Internal JSON-RPC error.", ""));
        console.log(errorObject);
               userInfo = {
