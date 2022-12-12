@@ -8,7 +8,7 @@ import './home.css';
 import Loader from '../../Layout/Loader/Loader';
 
 const Home = () => {
-    const { state: { contract, accounts , userInfo, userErr,networkID }, waiting } = useEth();
+    const { state: { contract, accounts , userInfo, userErr,networkID, networkIDValid }, waiting } = useEth();
     const [nameForm, setNameForm] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -24,8 +24,8 @@ const Home = () => {
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [accounts,waiting,networkID,userErr]);
-console.log(contract, accounts , userInfo, userErr,networkID);
+    }, [accounts,waiting,networkID]);
+
     const handleCreate = async e => {
         setLoading(true);
         e.preventDefault();
@@ -75,6 +75,7 @@ console.log(contract, accounts , userInfo, userErr,networkID);
                                     et la concurrence grâce à la technologie blockchain.</p>
                                 </div>
                                 <div className="rigth-container">
+                                    {networkID === networkIDValid ? (
                                         <>
                                             {accounts !== null ? (
                                                 <>
@@ -103,6 +104,11 @@ console.log(contract, accounts , userInfo, userErr,networkID);
                                                 </div>
                                             )}
                                         </>
+                                    ) : (
+                                        <div className='rigth-sub-container'>
+                                            <p id="network">Vous n'êtes pas connecté sur le bon réseau !</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </section>
