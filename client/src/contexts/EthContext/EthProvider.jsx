@@ -16,7 +16,7 @@ function EthProvider({ children }) {
         // =========================================
         setWaiting(true);
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-
+  console.log(web3);
         async function isMetaMaskConnected() {
           const {ethereum} = window;
           let accounts = await ethereum.request({method: 'eth_accounts'});
@@ -250,7 +250,7 @@ function EthProvider({ children }) {
         };
         
         const networkID = await web3.eth.net.getId();
-        
+        console.log(networkID);
         const { abi } = artifact;
 
         let address, contract;
@@ -263,7 +263,7 @@ function EthProvider({ children }) {
         } catch (err) {
           console.error(err);
         }
-        
+        console.log(address, contract);
         const {
           accounts, 
           owner, 
